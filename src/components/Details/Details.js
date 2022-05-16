@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 
 import * as patientService from '../../services/patientService';
 import { useAuthContext } from '../../contexts/AuthContext';
-import usePetState from '../../hooks/usePatientState';
+import usePatientState from '../../hooks/usePatientState';
 
 import { Button } from 'react-bootstrap';
 import ConfirmDialog from '../Common/ConfirmDialog';
@@ -11,14 +11,14 @@ import ConfirmDialog from '../Common/ConfirmDialog';
 const Details = () => {
     const navigate = useNavigate();
     const { user } = useAuthContext();
-    const { petId } = useParams();
-    const [pet, setPet] = usePetState(petId);
+    const { patientId } = useParams();
+    const [patient, setPet] = usePatientState(patientId);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     const deleteHandler = (e) => {
         e.preventDefault();
 
-        patientService.destroy(petId, user.accessToken)
+        patientService.destroy(patientId, user.accessToken)
             .then(() => {
                 navigate('/dashboard');
             })
@@ -35,8 +35,8 @@ const Details = () => {
 
     const ownerButtons = (
         <>
-            <Link className="button" to={`/add_protocol/${pet._id}`}>Add protocol</Link>
-            <Link className="button" to={`/edit/${pet._id}`}>Edit</Link>
+            <Link className="button" to={`/add_protocol/${patient._id}`}>Add protocol</Link>
+            <Link className="button" to={`/edit/${patient._id}`}>Edit</Link>
             <a className="button" href="#" onClick={deleteClickHandler}>Delete</a>
         </>
     );
@@ -48,22 +48,21 @@ const Details = () => {
         <>
             <ConfirmDialog show={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} onSave={deleteHandler} />
             <section id="details-page" className="details">
-                <div className="pet-information">
-                    <h3>Name: {pet.name}</h3>
-                    <p className="type">Type: {pet.type}</p>
-                    <p className="img"><img src={pet.imageUrl} /></p>
+                <div className="patient-information">
+                    <h3>Име: {patient.name}</h3>
+                    <h3>Протоколи:</h3>
+                    <p>{patient.description}</p>
                     <div className="actions">
-                        {user._id && (user._id == pet._ownerId
+                        {user._id && (user._id == patient._ownerId
                             ? ownerButtons
-                            : ""
+                            :<></>
                         )}
 
                 
                     </div>
                 </div>
-                <div className="pet-description">
-                    <h3>Description:</h3>
-                    <p>{pet.description}</p>
+                <div className="patient-description">
+                    
                 </div>
             </section>
         </>

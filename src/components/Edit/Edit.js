@@ -4,13 +4,7 @@ import * as patientService from '../../services/patientService';
 import usePatientState from '../../hooks/usePatientState';
 import { Alert } from 'react-bootstrap';
 
-const types = [
-    { value: 'dog', text: 'Dog' },
-    { value: 'parrot', text: 'Parrot' },
-    { value: 'cats', text: 'Cat' },
-    { value: 'reptile', text: 'Reptile' },
-    { value: 'other', text: 'Other' },
-]
+
 
 const Edit = () => {
     const { petId } = useParams();
@@ -40,32 +34,20 @@ const Edit = () => {
                 <fieldset>
                     <legend>Edit Patient</legend>
                     <p className="field">
-                        <label htmlFor="name">Name</label>
+                        <label htmlFor="name">Име</label>
                         <span className="input" style={{borderColor: errors.name ? 'red' : 'inherit'}}>
                             <input type="text" name="name" id="name" defaultValue={pet.name} onChange={nameChangeHandler} />
                         </span>
                         <Alert variant="danger" show={errors.name}>{errors.name}</Alert>
                     </p>
                     <p className="field">
-                        <label htmlFor="description">Description</label>
+                        <label htmlFor="description">Възраст</label>
                         <span className="input">
                             <textarea name="description" id="description" defaultValue={pet.description} />
                         </span>
                     </p>
-                    <p className="field">
-                        <label htmlFor="image">Image</label>
-                        <span className="input">
-                            <input type="text" name="imageUrl" id="image" defaultValue={pet.imageUrl} />
-                        </span>
-                    </p>
-                    <p className="field">
-                        <label htmlFor="type">Type</label>
-                        <span className="input">
-                            <select id="type" name="type" value={pet.type}>
-                                {types.map(x => <option key={x.value} value={x.value}>{x.text}</option>)}
-                            </select>
-                        </span>
-                    </p>
+
+
                     <input className="button submit" type="submit" value="Save" />
                 </fieldset>
             </form>
