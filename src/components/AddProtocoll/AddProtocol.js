@@ -33,17 +33,17 @@ const today = new Date().ddmmyyyy();
         let formData = new FormData(e.currentTarget);
 
         let patientId = formData.get('patientID');
+        let patientName = formData.get('patientName');
         let medication = formData.get('medication');
         let start = formData.get('start').split("-");
         let validity = Number(formData.get('validity'));
         let startDate = new Date(start[2], Number(start[1])-1, start[0]);
-        console.log(`Start date is: ${startDate}`);
         let endDate = new Date(startDate.setDate(startDate.getDate() + validity));
-        console.log(`end date is: ${endDate}`);
 
 
         protocolService.create({
             patientId,
+            patientName,
             medication,
             startDate,
             endDate
@@ -78,6 +78,7 @@ const today = new Date().ddmmyyyy();
                         </span>
                     </p>
                     <input type="hidden" name='patientID' value={patientId}></input>
+                    <input type="hidden" name='patientName' value={patient.name}></input>
                     <input className="button submit" type="submit" value="Добави протокол" />
                 </fieldset>
             </form>

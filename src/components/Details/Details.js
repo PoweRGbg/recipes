@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from 'react-router-dom';
 
 import * as patientService from '../../services/patientService';
 import { useAuthContext } from '../../contexts/AuthContext';
 import usePatientState from '../../hooks/usePatientState';
+import * as protocolService from '../../services/protocolService';
 
 import { Button } from 'react-bootstrap';
 import ConfirmDialog from '../Common/ConfirmDialog';
@@ -12,8 +13,35 @@ const Details = () => {
     const navigate = useNavigate();
     const { user } = useAuthContext();
     const { patientId } = useParams();
-    const [patient, setPet] = usePatientState(patientId);
+    const [patient, setPatient] = usePatientState(patientId);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [protocols, setProtocols] = useState([]);
+
+    
+    Date.prototype.ddmmyyyy = function() {
+        var mm = this.getMonth() + 1; // getMonth() is zero-based
+        var dd = this.getDate();
+        
+        return [(dd>9 ? '' : '0') + dd,
+        (mm>9 ? '' : '0') + mm,
+        this.getFullYear()
+        
+    ].join('-');
+    };
+
+    useEffect(() => {
+        protocolService.getAll()
+            .then(result => {
+                let filtered = [];
+                result.forEach(x => {if(x.patientName === patient.name)
+                    filtered.push(x);
+                });
+                setProtocols(filtered);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }, [patient]);
 
     const deleteHandler = (e) => {
         e.preventDefault();
@@ -51,7 +79,11 @@ const Details = () => {
                 <div className="patient-information">
                     <h3>Име: {patient.name}</h3>
                     <h3>Протоколи:</h3>
-                    <p>{patient.description}</p>
+                    <p>            
+                        <ul>
+                            {protocols.map(x => <li key={x._id}>{x.medication} до {new Date(x.endDate).ddmmyyyy()}</li>)}
+                        </ul>
+                    </p>
                     <div className="actions">
                         {user._id && (user._id == patient._ownerId
                             ? ownerButtons

@@ -21,7 +21,7 @@ const PatientList = () => {
             {patients.length > 0
                 ? (
                     <ul className="other-patients-list">
-                        {patients.map(x => <PatientCard key={x._id} pet={x} />)}
+                        {patients.map(x => <PatientCard key={x._id} patient={x} />)}
                     </ul>
                 ) 
                 : <p className="no-patients">No patients in database!</p>
