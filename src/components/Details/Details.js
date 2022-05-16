@@ -29,12 +29,17 @@ const Details = () => {
     ].join('-');
     };
 
+    function isValid(protocolDate){
+        return new Date(protocolDate).getTime() >= Date.now();
+    }
+
     useEffect(() => {
         protocolService.getAll()
             .then(result => {
                 let filtered = [];
-                result.forEach(x => {if(x.patientName === patient.name)
+                result.forEach(x => {if(x.patientName === patient.name && isValid(x.endDate)){
                     filtered.push(x);
+                }
                 });
                 setProtocols(filtered);
             })

@@ -17,6 +17,11 @@ const PatientCard = ({
     ].join('-');
     };
 
+    
+    function isValid(protocolDate){
+        return new Date(protocolDate).getTime() >= Date.now();
+    }
+
     const [protocols, setProtocols] = useState([]);
     useEffect(() => {
         protocolService.getAll()
@@ -24,7 +29,7 @@ const PatientCard = ({
                 console.log(`Ime - ${patient.name}`);
                 console.log(result);
                 let filtered = [];
-                result.forEach(x => {if(x.patientName === patient.name)
+                result.forEach(x => {if(x.patientName === patient.name && isValid(x.endDate))
                     filtered.push(x);
                 });
                 setProtocols(filtered);
