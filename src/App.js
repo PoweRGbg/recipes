@@ -15,6 +15,7 @@ import DeleteProtocol from './components/DeleteProtocol';
 import Details from './components/Details';
 import ErrorBoundary from './components/Common/ErrorBoundary';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import RenewProtocol from './components/RenewProtocol';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
               <Route path="/add_protocol/:patientId" element={<AddProtocol />} />
               <Route path="/protocol/edit/:protocolId" element={<EditProtocol />} />
               <Route path="/protocol/delete/:protocolId" element={<DeleteProtocol />} />
+              <Route path="/protocol/renew/:protocolId" element={<RenewProtocol />} />
               <Route path="/details/:patientId" element={<Details />} />
             </Routes>
           </main>

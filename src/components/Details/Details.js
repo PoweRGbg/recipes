@@ -87,7 +87,7 @@ const Details = () => {
                             {protocols.map(x => 
                             <div className="div-list-item"> 
                                 <li key={x._id}>{x.medication} до {new Date(x.endDate).ddmmyyyy()}
-                                    <a href={`/protocol/edit/${x._id}`}>
+                                    <a href={`/protocol/renew/${x._id}`}>
                                         <img className="protocolIcons" src="/images/icons/gui_redo_icon_157048.png" alt="Поднови протокол"></img>
                                     </a>
                                     <a href={`/protocol/edit/${x._id}`}>
