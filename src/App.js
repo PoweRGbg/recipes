@@ -11,6 +11,7 @@ import Create from './components/Create';
 import Edit from './components/Edit';
 import AddProtocol from './components/AddProtocoll';
 import EditProtocol from './components/EditProtocol';
+import DeleteProtocol from './components/DeleteProtocol';
 import Details from './components/Details';
 import ErrorBoundary from './components/Common/ErrorBoundary';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -34,6 +35,7 @@ function App() {
               <Route path="/edit/:patientId" element={<Edit />} />
               <Route path="/add_protocol/:patientId" element={<AddProtocol />} />
               <Route path="/protocol/edit/:protocolId" element={<EditProtocol />} />
+              <Route path="/protocol/delete/:protocolId" element={<DeleteProtocol />} />
               <Route path="/details/:patientId" element={<Details />} />
             </Routes>
           </main>

@@ -78,7 +78,7 @@ const Details = () => {
 
     return (
         <>
-            <ConfirmDialog show={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} onSave={deleteHandler} />
+            <ConfirmDialog text={`Сигурни ли сте, че искате да изтриете ${patient.name}?`} show={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} onSave={deleteHandler} />
             <section id="details-page" className="details">
                 <div className="patient-information">
                     <h3>Име: {patient.name}</h3>
@@ -93,7 +93,7 @@ const Details = () => {
                                     <a href={`/protocol/edit/${x._id}`}>
                                     <img className="protocolIcons" src="/images/icons/gui_edit_icon_157165.png" alt="Редактирай протокол"></img>
                                     </a>
-                                    <a href={`/protocol/edit/${x._id}`}>
+                                    <a href={`/protocol/delete/${x._id}`}>
                                     <img className="protocolIcons" src="/images/icons/gui_delete_no_icon_157196.png" alt="Премахни протокол"></img>
                                     </a>
                                 </li>

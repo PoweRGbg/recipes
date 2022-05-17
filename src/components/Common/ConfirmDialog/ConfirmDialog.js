@@ -17,8 +17,8 @@ export default function ConfirmDialog ({
             </Modal.Body>
 
             <Modal.Footer>
-                <Button variant="secondary" onClick={onClose}>No</Button>
-                <Button variant="primary" onClick={onSave}>Yes</Button>
+                <Button variant="secondary" onClick={onClose}>Не</Button>
+                <Button variant="primary" onClick={onSave}>Да</Button>
             </Modal.Footer>
         </Modal>
     );
