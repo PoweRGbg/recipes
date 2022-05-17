@@ -32,6 +32,7 @@ function App() {
               <Route path="/create" element={<Create />} />
               <Route path="/edit/:patientId" element={<Edit />} />
               <Route path="/add_protocol/:patientId" element={<AddProtocol />} />
+              <Route path="/protocol/edit/:protocolId" element={<AddProtocol />} />
               <Route path="/details/:patientId" element={<Details />} />
             </Routes>
           </main>
