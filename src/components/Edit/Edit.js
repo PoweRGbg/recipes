@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import * as patientService from '../../services/patientService';
 import usePatientState from '../../hooks/usePatientState';
 import { Alert } from 'react-bootstrap';
 

@@ -54,6 +54,7 @@ a {
 
 li {
     list-style-type: none;
+    overflow: hidden;
 }
 
 .fa-heart {
@@ -190,3 +191,37 @@ textarea#description {
     padding: 10px;
     box-shadow: -8px -2px 28px -8px #000000;
 }
+
+.protocolIcons {
+    position:relative;
+    margin: 0%;
+    height: 24px;
+    width: 24px;
+    margin: 0px, 0px, 0px,50px;
+}
+
+
+.list-item {
+        margin: 0;
+        position: relative;
+        text-align: center;
+        top: 50%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+}
+
+.list{
+    width: 100%;
+}
+
+.patient-information{
+    width: 80%;
+}
+
+.div-list-item{
+    margin-left: 50px;
+    width: 100%;
+    padding: 0;
+
+}
+

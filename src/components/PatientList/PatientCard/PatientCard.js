@@ -1,10 +1,14 @@
 import { Link} from 'react-router-dom';
 import { useEffect, useState } from "react";
 import * as protocolService from '../../../services/protocolService';
+import { useAuthContext } from '../../../contexts/AuthContext';
+
 
 const PatientCard = ({
     patient
 }) => {
+    
+    const { user } = useAuthContext();
 
     Date.prototype.ddmmyyyy = function() {
         var mm = this.getMonth() + 1; // getMonth() is zero-based
@@ -24,12 +28,13 @@ const PatientCard = ({
 
     const [protocols, setProtocols] = useState([]);
     useEffect(() => {
-        protocolService.getAll()
+        protocolService.getByPatient(patient._id, user.accessToken)
             .then(result => {
+                console.log(`ID - ${patient._id}`);
                 console.log(`Ime - ${patient.name}`);
                 console.log(result);
                 let filtered = [];
-                result.forEach(x => {if(x.patientName === patient.name && isValid(x.endDate))
+                result.forEach(x => {if(isValid(x.endDate))
                     filtered.push(x);
                 });
                 setProtocols(filtered);
@@ -37,7 +42,7 @@ const PatientCard = ({
             .catch(err => {
                 console.log(err);
             })
-    }, [patient]);
+    }, [patient, user.accessToken]);
 
     return (
         <li className="otherPet">

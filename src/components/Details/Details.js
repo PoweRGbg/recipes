@@ -34,12 +34,11 @@ const Details = () => {
     }
 
     useEffect(() => {
-        protocolService.getAll()
+        protocolService.getByPatient(patient._id, user.accessToken)
             .then(result => {
                 let filtered = [];
-                result.forEach(x => {if(x.patientName === patient.name && isValid(x.endDate)){
+                result.forEach(x => {if(isValid(x.endDate))
                     filtered.push(x);
-                }
                 });
                 setProtocols(filtered);
             })
@@ -84,11 +83,23 @@ const Details = () => {
                 <div className="patient-information">
                     <h3>Име: {patient.name}</h3>
                     <h3>Протоколи:</h3>
-                    <p>            
-                        <ul>
-                            {protocols.map(x => <li key={x._id}>{x.medication} до {new Date(x.endDate).ddmmyyyy()}</li>)}
+                        <ul className="list">
+                            {protocols.map(x => 
+                            <div className="div-list-item"> 
+                                <li key={x._id}>{x.medication} до {new Date(x.endDate).ddmmyyyy()}
+                                    <a href={`/protocol/edit/${x._id}`}>
+                                        <img className="protocolIcons" src="/images/icons/gui_redo_icon_157048.png" alt="Поднови протокол"></img>
+                                    </a>
+                                    <a href={`/protocol/edit/${x._id}`}>
+                                    <img className="protocolIcons" src="/images/icons/gui_edit_icon_157165.png" alt="Редактирай протокол"></img>
+                                    </a>
+                                    <a href={`/protocol/edit/${x._id}`}>
+                                    <img className="protocolIcons" src="/images/icons/gui_delete_no_icon_157196.png" alt="Премахни протокол"></img>
+                                    </a>
+                                </li>
+                            </div>
+                            )}
                         </ul>
-                    </p>
                     <div className="actions">
                         {user._id && (user._id == patient._ownerId
                             ? ownerButtons
