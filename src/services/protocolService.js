@@ -44,11 +44,12 @@ export const remove = (protocolId, token) => {
     }).then(res => res.json());
 };
 
-export const update = (protocolId, token) => {
+export const update = (protocolId, protocolData, token) => {
     return fetch(`${baseUrl}/protocols/${protocolId}`, {
         method: 'PUT',
         headers: {
             'X-Authorization': token
-        }
+        },
+        body: JSON.stringify({...protocolData})
     }).then(res => res.json());
 };
