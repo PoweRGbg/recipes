@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from 'react-router-dom';
 
 import * as patientService from '../../services/patientService';
+import * as recipeService from '../../services/recipeService';
 import { useAuthContext } from '../../contexts/AuthContext';
 import usePatientState from '../../hooks/usePatientState';
 import * as protocolService from '../../services/protocolService';
 
 import { Button } from 'react-bootstrap';
 import ConfirmDialog from '../Common/ConfirmDialog';
+import RecipesList  from '../RecipesList'
 
 const Details = () => {
     const navigate = useNavigate();
@@ -67,7 +69,7 @@ const Details = () => {
 
     const ownerButtons = (
         <>
-            <Link className="button" to={`/add_protocol/${patient._id}`}>Нов протокол</Link>
+            <Link className="button" to={`/protocol/add/${patient._id}`}>Нов протокол</Link>
             <Link className="button" to={`/edit/${patient._id}`}>Редактирай пациент</Link>
             <a className="button" href="#" onClick={deleteClickHandler}>Премахни пациент</a>
         </>
@@ -86,7 +88,10 @@ const Details = () => {
                         <ul className="list">
                             {protocols.map(x => 
                             <div className="div-list-item"> 
-                                <li key={x._id}>{x.medication} до {new Date(x.endDate).ddmmyyyy()}
+                                <li key={x._id}>За <b>{x.medication}</b> до {new Date(x.endDate).ddmmyyyy()}
+                                    <a href={`/recipe/add/${x._id}`}>
+                                        <img className="protocolIcons" src="/images/icons/gui_add_icon.png" alt="Добави рецепта"></img>
+                                    </a>
                                     <a href={`/protocol/renew/${x._id}`}>
                                         <img className="protocolIcons" src="/images/icons/gui_redo_icon_157048.png" alt="Поднови протокол"></img>
                                     </a>
@@ -96,6 +101,7 @@ const Details = () => {
                                     <a href={`/protocol/delete/${x._id}`}>
                                     <img className="protocolIcons" src="/images/icons/gui_delete_no_icon_157196.png" alt="Премахни протокол"></img>
                                     </a>
+                                    <RecipesList protocolId={x._id} />
                                 </li>
                             </div>
                             )}
