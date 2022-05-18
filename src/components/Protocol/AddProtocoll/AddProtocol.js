@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import * as protocolService from '../../../services/protocolService';
-import usePatientState from '../../../hooks/usePatientState';
+import usePatientState from '../../../hooks/useRecipesState';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../contexts/AuthContext';
