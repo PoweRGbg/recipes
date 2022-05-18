@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import * as recipeService from '../../services/recipeService';
 
 import useRecipesState from '../../hooks/useRecipesState';
-
-
+import { useAuthContext } from '../../contexts/AuthContext';
+import ConfirmDialog from '../Common/ConfirmDialog';
 
 const RecipesList = (props) => {
     const  protocolId  = props.protocolId;
     const [recipes, setRecipes] = useRecipesState(protocolId);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [selectedRecipe, setSelectedRecipe] = useState();
+    const { user } = useAuthContext();
+    const navigate = useNavigate();
 
     
     Date.prototype.ddmmyyyy = function() {
@@ -25,15 +30,27 @@ const RecipesList = (props) => {
         return new Date(protocolDate).getTime() >= Date.now();
     }
 
+    const deleteHandler = (e) => {
+        e.preventDefault();
+        console.log(`Deleting recipe for ${selectedRecipe.medication}`);
+        recipeService.remove(selectedRecipe._id, user.accessToken)
+            .then(() => {
+                const toAddress= "/details/"+selectedRecipe.patientId;
+                setSelectedRecipe(undefined);
+                window.location.reload(false);
+                // navigate("/dashboard");
+            });
+        }
+
     return (
         <>
+            <ConfirmDialog text={`Взехте ли тази рецепта за ${selectedRecipe ? selectedRecipe.medication:""} ?`} show={showDeleteDialog} onClose={() => {setShowDeleteDialog(false)}} onSave={deleteHandler} />
             <h5>Рецепти:</h5>
             <ul>
             {recipes && recipes.length > 0 ?recipes.map(x=>{
             return <li key={x._id}>{x.medication} до {new Date(x.endDate).ddmmyyyy()}
-                    <a href={`/protocol/delete/${x._id}`}>
-                    <img className="protocolIcons" src="/images/icons/gui_delete_no_icon_157196.png" alt="Вземи рецепта" title="Рецептата е взета"></img>
-                    </a>
+                    
+                    <Link className="button" to="#" onClick={() => {setSelectedRecipe(x); setShowDeleteDialog(true)}}>Вземи рецепта</Link>
             </li>
         }):""}
                     
