@@ -1,18 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import * as protocolService from '../../services/protocolService';
-import usePatientState from '../../hooks/usePatientState';
+import * as protocolService from '../../../services/protocolService';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../../contexts/AuthContext';
-import ConfirmDialog from '../Common/ConfirmDialog';
+import { useAuthContext } from '../../../contexts/AuthContext';
+import ConfirmDialog from '../../Common/ConfirmDialog';
 
 
 const DeleteProtocol = () => { 
     const { user } = useAuthContext();
     const { protocolId } = useParams();
     const [errors, setErrors] = useState({name: false})
-    const [patient, setPatient] = useState();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     const navigate = useNavigate();

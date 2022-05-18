@@ -9,13 +9,13 @@ import Register from './components/Register';
 import MyPatients from './components/MyPatients';
 import Create from './components/Create';
 import Edit from './components/Edit';
-import AddProtocol from './components/AddProtocoll';
-import EditProtocol from './components/EditProtocol';
-import DeleteProtocol from './components/DeleteProtocol';
+import AddProtocol from './components/Protocol/AddProtocoll';
+import EditProtocol from './components/Protocol/EditProtocol';
+import DeleteProtocol from './components/Protocol/DeleteProtocol';
 import Details from './components/Details';
 import ErrorBoundary from './components/Common/ErrorBoundary';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import RenewProtocol from './components/RenewProtocol';
+import RenewProtocol from './components/Protocol/EditProtocol/RenewProtocol';
 
 function App() {
   return (

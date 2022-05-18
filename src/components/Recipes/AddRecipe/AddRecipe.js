@@ -6,7 +6,7 @@ import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/AuthContext';
 
-const AddProtocol = () => { 
+const AddRecipe = () => { 
     const { user } = useAuthContext();
     const { patientId } = useParams();
     const [errors, setErrors] = useState({name: false})
@@ -86,4 +86,4 @@ const today = new Date().ddmmyyyy();
     );
 }
 
-export default AddProtocol; 
+export default AddRecipe; 
