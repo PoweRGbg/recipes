@@ -13,10 +13,12 @@ import AddProtocol from './components/Protocol/AddProtocoll';
 import EditProtocol from './components/Protocol/EditProtocol';
 import DeleteProtocol from './components/Protocol/DeleteProtocol';
 import AddRecipe from './components/Recipe/AddRecipe';
+import RecipesList from './components/RecipesList';
+
 import Details from './components/Details';
 import ErrorBoundary from './components/Common/ErrorBoundary';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import RenewProtocol from './components/Protocol/EditProtocol/RenewProtocol';
+import RenewProtocol from './components/Protocol/RenewProtocol';
 
 function App() {
   return (
@@ -40,6 +42,7 @@ function App() {
               <Route path="/protocol/delete/:protocolId" element={<DeleteProtocol />} />
               <Route path="/protocol/renew/:protocolId" element={<RenewProtocol />} />
               <Route path="/recipe/add/:protocolId" element={<AddRecipe />} />
+              <Route path="/recipeslist/:protocolId" element={<RecipesList />} />
               <Route path="/details/:patientId" element={<Details />} />
             </Routes>
           </main>

@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from 'react-router-dom';
 
-import * as recipeService from '../../services/recipeService';
-import { useAuthContext } from '../../contexts/AuthContext';
+import useRecipesState from '../../hooks/useRecipesState';
+
 
 
 const RecipesList = (props) => {
-    const { user } = useAuthContext();
     const  protocolId  = props.protocolId;
-    const [recipes, setRecipes] = useState();
+    const [recipes, setRecipes] = useRecipesState(protocolId);
 
     
     Date.prototype.ddmmyyyy = function() {
@@ -26,31 +25,18 @@ const RecipesList = (props) => {
         return new Date(protocolDate).getTime() >= Date.now();
     }
 
-    useEffect(() => {
-        recipeService.getByprotocol(protocolId, user.accessToken)
-            .then(result => {
-                console.log("Getting recipes for "+protocolId);
-                console.log(`Results size ${result.length}`);
-                let filtered = [];
-                result.forEach(x => {if(true){
-                    console.log(x);
-                    filtered.push(x);
-
-                }
-                });
-                setRecipes(filtered);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }, [recipes]);
-
     return (
         <>
+            <h5>Рецепти:</h5>
             <ul>
-                { recipes.map(x=>{
-                    <li key={x._id}>{x.medication} до {new Date(x.endDate).ddmmyyyy()}</li>
-                    })}
+            {recipes && recipes.length > 0 ?recipes.map(x=>{
+            return <li key={x._id}>{x.medication} до {new Date(x.endDate).ddmmyyyy()}
+                    <a href={`/protocol/delete/${x._id}`}>
+                    <img className="protocolIcons" src="/images/icons/gui_delete_no_icon_157196.png" alt="Вземи рецепта" title="Рецептата е взета"></img>
+                    </a>
+            </li>
+        }):""}
+                    
             </ul>
         </>
     );

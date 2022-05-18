@@ -33,7 +33,7 @@ export const getByPatient = (patientId, token) => {
     }).then(res => res.json());
 };
 
-export const getByprotocol = (protocolId, token) => {
+export const getByProtocol = (protocolId, token) => {
     return fetch(`${baseUrl}/recipes?where=protocolId%3D%22${protocolId}%22`, {
         method: 'GET',
         headers: {
