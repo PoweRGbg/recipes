@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from 'react-router-dom';
 
 import * as patientService from '../../services/patientService';
-import * as recipeService from '../../services/recipeService';
 import { useAuthContext } from '../../contexts/AuthContext';
 import usePatientState from '../../hooks/usePatientState';
 import * as protocolService from '../../services/protocolService';
@@ -86,8 +85,9 @@ const Details = () => {
                     <h3>Име: {patient.name}</h3>
                     <h3>Протоколи:</h3>
                         <ul className="list">
-                            {protocols.map(x => 
-                            <div className="div-list-item"> 
+                            {protocols.map(x =>{ 
+
+                            return <div className="div-list-item"> 
                                 <li key={x._id}>За <b>{x.medication}</b> до {new Date(x.endDate).ddmmyyyy()}
                                     <a href={`/recipe/add/${x._id}`}>
                                         <img className="protocolIcons" src="/images/icons/gui_add_icon.png" alt="Добави рецепта"></img>
@@ -104,6 +104,7 @@ const Details = () => {
                                     <RecipesList protocolId={x._id} />
                                 </li>
                             </div>
+                            }
                             )}
                         </ul>
                     <div className="actions">
