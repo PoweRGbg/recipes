@@ -8,7 +8,6 @@ const PatientList = () => {
     useEffect(() => {
         patientService.getAll()
             .then(result => {
-                console.log(result);
                 setPatients(result);
             })
             .catch(err => {
@@ -24,7 +23,7 @@ const PatientList = () => {
                         {patients.map(x => <PatientCard key={x._id} patient={x} />)}
                     </ul>
                 ) 
-                : <p className="no-patients">No patients in database!</p>
+                : <p className="no-patients">Нямате добавени пациенти!</p>
             }
         </>
     );

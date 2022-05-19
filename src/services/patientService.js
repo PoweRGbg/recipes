@@ -19,13 +19,13 @@ export const create = async (patientData, token) => {
     return result;
 };
 
-export const getOne = (petId) => {
-    return fetch(`${baseUrl}/patients/${petId}`)
+export const getOne = (patientId) => {
+    return fetch(`${baseUrl}/patients/${patientId}`)
         .then(res => res.json())
 };
 
-export const destroy = (petId, token) => {
-    return fetch(`${baseUrl}/patients/${petId}`, {
+export const destroy = (patientId, token) => {
+    return fetch(`${baseUrl}/patients/${patientId}`, {
         method: 'DELETE',
         headers: {
             'X-Authorization': token
@@ -33,8 +33,8 @@ export const destroy = (petId, token) => {
     }).then(res => res.json());
 };
 
-export const like = (petId, pet, token) => {
-    return fetch(`${baseUrl}/patients/${petId}`, {
+export const like = (patientId, pet, token) => {
+    return fetch(`${baseUrl}/patients/${patientId}`, {
         method: 'PUT',
         headers: {
             'content-type': 'application/json',

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import * as protocolService from '../../../services/protocolService';
+import * as patientService from '../../../services/patientService';
 import usePatientState from '../../../hooks/useRecipesState';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -28,8 +29,6 @@ const today = new Date().ddmmyyyy();
     const addProtocolSubmitHandler = (e) => {
         e.preventDefault();
 
-        console.log('Submit');
-
         let formData = new FormData(e.currentTarget);
 
         let patientId = formData.get('patientID');
@@ -40,17 +39,34 @@ const today = new Date().ddmmyyyy();
         let startDate = new Date(start[2], Number(start[1])-1, start[0]);
         let endDate = new Date(startDate.setDate(startDate.getDate() + validity));
 
+        if(patientName == ""){
+            patientService.getOne(patientId).then(result =>{
+                patientName = result.name;
+                protocolService.create({
+                    patientId,
+                    patientName,
+                    medication,
+                    startDate,
+                    endDate
+                }, user.accessToken)
+                    .then(result => {
+                        navigate(`/details/${patientId}`);
+                    })
+            });
 
-        protocolService.create({
-            patientId,
-            patientName,
-            medication,
-            startDate,
-            endDate
-        }, user.accessToken)
-            .then(result => {
-                navigate(`/details/${patientId}`);
-            })
+        } else {
+            protocolService.create({
+                patientId,
+                patientName,
+                medication,
+                startDate,
+                endDate
+            }, user.accessToken)
+                .then(result => {
+                    navigate(`/details/${patientId}`);
+                })
+        }
+
     }
 
     return (

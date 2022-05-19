@@ -9,7 +9,7 @@ import ConfirmDialog from '../Common/ConfirmDialog';
 const RecipesList = (props) => {
     const  protocolId  = props.protocolId;
     const  patientId  = props.patientId;
-    const [recipes, setRecipes] = useRecipesState(protocolId, patientId);
+    const [recipes] = useRecipesState(protocolId, patientId);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [selectedRecipe, setSelectedRecipe] = useState();
     const { user } = useAuthContext();
@@ -24,10 +24,6 @@ const RecipesList = (props) => {
         
     ].join('-');
     };
-
-    function isValid(protocolDate){
-        return new Date(protocolDate).getTime() >= Date.now();
-    }
 
     const deleteHandler = (e) => {
         e.preventDefault();

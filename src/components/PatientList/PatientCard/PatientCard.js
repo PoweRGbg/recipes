@@ -30,9 +30,6 @@ const PatientCard = ({
     useEffect(() => {
         protocolService.getByPatient(patient._id, user.accessToken)
             .then(result => {
-                console.log(`ID - ${patient._id}`);
-                console.log(`Ime - ${patient.name}`);
-                console.log(result);
                 let filtered = [];
                 result.forEach(x => {if(isValid(x.endDate))
                     filtered.push(x);
@@ -46,12 +43,8 @@ const PatientCard = ({
 
     return (
         <li className="otherPet">
-            <h3>Име: {patient.name}</h3>
-            <p>Възраст: {patient.age}</p>
-            <ul>
-                        {protocols.map(x => <li>{x.medication} до {new Date(x.endDate).ddmmyyyy()}</li>)}
-            </ul>
-            <Link className="button" to={`/details/${patient._id}`}>Още</Link>
+            <h4>Пациент: {patient.name} <Link className="button" to={`/details/${patient._id}`}>Детайли</Link></h4>
+            
         </li>
     );
 }
