@@ -35,10 +35,8 @@ const RecipesList = (props) => {
         console.log(`Deleting recipe for ${selectedRecipe.medication}`);
         recipeService.remove(selectedRecipe._id, user.accessToken)
             .then(() => {
-                const toAddress= "/details/"+selectedRecipe.patientId;
                 setSelectedRecipe(undefined);
                 window.location.reload(false);
-                // navigate("/dashboard");
             });
         }
 
