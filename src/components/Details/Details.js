@@ -90,16 +90,16 @@ const Details = () => {
                             return <div className="div-list-item"> 
                                 <li key={x._id}>За <b>{x.medication}</b> до {new Date(x.endDate).ddmmyyyy()}
                                     <a href={`/recipe/add/${x._id}`}>
-                                        <img className="protocolIcons" src="/images/icons/gui_add_icon.png" alt="Добави рецепта"></img>
+                                        <img className="protocolIcons" src="/images/icons/gui_add_icon.png" title="Добави рецепта"></img>
                                     </a>
                                     <a href={`/protocol/renew/${x._id}`}>
-                                        <img className="protocolIcons" src="/images/icons/gui_redo_icon_157048.png" alt="Поднови протокол"></img>
+                                        <img className="protocolIcons" src="/images/icons/gui_redo_icon_157048.png" title="Поднови протокол"></img>
                                     </a>
                                     <a href={`/protocol/edit/${x._id}`}>
-                                    <img className="protocolIcons" src="/images/icons/gui_edit_icon_157165.png" alt="Редактирай протокол"></img>
+                                    <img className="protocolIcons" src="/images/icons/gui_edit_icon_157165.png" title="Редактирай протокол"></img>
                                     </a>
                                     <a href={`/protocol/delete/${x._id}`}>
-                                    <img className="protocolIcons" src="/images/icons/gui_delete_no_icon_157196.png" alt="Премахни протокол"></img>
+                                    <img className="protocolIcons" src="/images/icons/gui_delete_no_icon_157196.png" title="Премахни протокол"></img>
                                     </a>
                                     <RecipesList protocolId={x._id} />
                                 </li>
