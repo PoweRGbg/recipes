@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import * as recipeService from '../../../services/recipeService';
 import * as protocolService from '../../../services/protocolService';
-import usePatientState from '../../../hooks/useRecipesState';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../contexts/AuthContext';
@@ -48,26 +47,51 @@ const today = new Date().ddmmyyyy();
         let patientName = formData.get('patientName');
         let protocolId = formData.get('protocolId');
         let medication = formData.get('medication');
+        let triple = formData.get('triple');
         let start = formData.get('start').split("-");
         let validity = Number(formData.get('validity'));
         let startDate = new Date(start[2], Number(start[1])-1, start[0]);
         let endDate = new Date(startDate.setDate(startDate.getDate() + validity));
         
-        console.log(`Adding recipe for ${medication} patient ${patientName}`);
-
-        recipeService.create({
-            patientId,
-            patientName,
-            protocolId,
-            medication,
-            startDate,
-            endDate
-        }, user.accessToken)
+        console.log(`Adding recipe for ${medication} patient ${patientName} ${triple}`);
+        //add single or tripple recipe
+        if(triple){
+            for (let index = 1;index < 4;index++) {
+                if(index !== 1){
+                    startDate = endDate;
+                    endDate = new Date(startDate.setDate(startDate.getDate() + validity));
+                }
+                
+                recipeService.create({
+                        patientId,
+                        patientName,
+                        protocolId,
+                        medication,
+                        startDate,
+                        endDate
+                    }, user.accessToken)
+                .then(result => {
+                        console.log(`Added recipe for ${medication} ${index} of 3`);
+                        // Go to patient details after the last recipe
+                        if(index === 3)
+                            navigate(`/details/${patientId}`);
+                    })
+            }
+        } else {
+            recipeService.create({
+                    patientId,
+                    patientName,
+                    protocolId,
+                    medication,
+                    startDate,
+                    endDate
+                }, user.accessToken)
             .then(result => {
-                navigate(`/details/${patientId}`);
-            })
+                    navigate(`/details/${patientId}`);
+                })
+        }
     }
-
+    
     return (
         <section id="edit-page" className="edit">
             <form id="edit-form" method="POST" onSubmit={addRecipeSubmitHandler}>
@@ -92,6 +116,10 @@ const today = new Date().ddmmyyyy();
                             <input name="validity" id="validity" defaultValue="30" />
                         </span>
                     </p>
+                    <div><label for="triple" className='label-check'>Това е тройна рецепта?
+                    <input className="checkbox-triple" type="checkbox" id="triple" name="triple"></input>
+                    </label>
+                    </div>
                     <input type="hidden" name='patientID' value={protocol ? protocol.patientId:""}></input>
                     <input type="hidden" name='patientName' value={protocol ? protocol.patientName:""}></input>
                     <input type="hidden" name='protocolId' value={protocolId ? protocolId:""}></input>
