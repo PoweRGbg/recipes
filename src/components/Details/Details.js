@@ -69,6 +69,7 @@ const Details = () => {
     const ownerButtons = (
         <>
             <Link className="button" to={`/protocol/add/${patient._id}`}>Нов протокол</Link>
+            <Link className="button" to={`/recipe/add_recipe/${patient._id}`}>Нова рецепта</Link>
             <Link className="button" to={`/edit/${patient._id}`}>Редактирай пациент</Link>
             <a className="button" href="#" onClick={deleteClickHandler}>Премахни пациент</a>
         </>

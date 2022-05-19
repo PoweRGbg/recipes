@@ -5,11 +5,14 @@ import * as protocolService from '../../../services/protocolService';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../contexts/AuthContext';
+import usePatientState from '../../../hooks/usePatientState';
+
 
 const AddRecipe = () => { 
     const { user } = useAuthContext();
-    const { protocolId } = useParams();
+    const { protocolId, patientId } = useParams();
     const [errors, setErrors] = useState({name: false})
+    const [patient, setPatient] = usePatientState(patientId);
     const [protocol, setProtocol] = useState();
     const navigate = useNavigate();
     
@@ -26,14 +29,18 @@ const AddRecipe = () => {
 const today = new Date().ddmmyyyy();
 
     useEffect(() => {
-        console.log("Getting protocol "+protocolId);
-        protocolService.getOne(protocolId)
+        console.log(`Patient is ${patient.name} ${patientId}`);
+        if(protocolId){
+            console.log("Getting protocol "+protocolId);
+            protocolService.getOne(protocolId)
             .then(result => {
                 setProtocol(result);
             })
             .catch(err => {
                 console.log(err);
             })
+            
+        }
     }, []);
     
 
@@ -43,8 +50,8 @@ const today = new Date().ddmmyyyy();
         
         let formData = new FormData(e.currentTarget);
         
-        let patientId = formData.get('patientID');
-        let patientName = formData.get('patientName');
+        let patientId = patient ? patient._id : formData.get('patientID');
+        let patientName = patient ? patient.name : formData.get('patientName');
         let protocolId = formData.get('protocolId');
         let medication = formData.get('medication');
         let triple = formData.get('triple');
@@ -53,7 +60,7 @@ const today = new Date().ddmmyyyy();
         let startDate = new Date(start[2], Number(start[1])-1, start[0]);
         let endDate = new Date(startDate.setDate(startDate.getDate() + validity));
         
-        console.log(`Adding recipe for ${medication} patient ${patientName} ${triple}`);
+        console.log(`Adding recipe for ${medication} patient ${patient.name} ${triple}`);
         //add single or tripple recipe
         if(triple){
             for (let index = 1;index < 4;index++) {
@@ -96,7 +103,7 @@ const today = new Date().ddmmyyyy();
         <section id="edit-page" className="edit">
             <form id="edit-form" method="POST" onSubmit={addRecipeSubmitHandler}>
                 <fieldset>
-                    <legend>Добави рецепта към протокол {protocol ? protocol.medication:""}</legend>
+                    <legend>Добави рецепта {protocol && protocol.medication != undefined ? "към протокол за " + protocol.medication:""} {patient ? `за ${patient.name}`:""}</legend>
                     <p className="field">
                         <label htmlFor="name">Лекарство</label>
                         <span className="input" style={{borderColor: errors.name ? 'red' : 'inherit'}}>
@@ -123,7 +130,7 @@ const today = new Date().ddmmyyyy();
                     <input type="hidden" name='patientID' value={protocol ? protocol.patientId:""}></input>
                     <input type="hidden" name='patientName' value={protocol ? protocol.patientName:""}></input>
                     <input type="hidden" name='protocolId' value={protocolId ? protocolId:""}></input>
-                    <input className="button submit" type="submit" value="Добави протокол" />
+                    <input className="button submit" type="submit" value="Добави рецепта" />
                 </fieldset>
             </form>
         </section>
