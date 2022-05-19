@@ -2,6 +2,7 @@ import PatientList from '../PatientList';
 import './Dashboard.css';
 import { useAuthContext } from '../../contexts/AuthContext';
 import ExpiringProtocols from '../ExpiringProtocols/ExpiringProtocols';
+import ExpiringRecipes from '../ExpiringRecipes';
 
 const Dashboard = () => {
     const { user } = useAuthContext();
@@ -12,8 +13,11 @@ const Dashboard = () => {
 
         <section id="details-page" className="details">
             <h2>Предстоящи събития</h2>
+            <section>
+
             <ExpiringProtocols />
-                    
+            <ExpiringRecipes />
+            </section>                    
         </section>
         
         <section id="dashboard-page" className="dashboard">
