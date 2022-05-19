@@ -19,7 +19,7 @@ const useRecipesState = (protocolId, patientId) => {
         .then(recipesList => {
             setRecipes(recipesList);
         })
-    }, [protocolId, patientId]);
+    }, [protocolId, patientId, user.accessToken]);
         
 
     return [
