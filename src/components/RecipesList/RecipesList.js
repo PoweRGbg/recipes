@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useState } from "react";
+import { Link } from 'react-router-dom';
 import * as recipeService from '../../services/recipeService';
 
 import useRecipesState from '../../hooks/useRecipesState';
@@ -8,13 +8,12 @@ import ConfirmDialog from '../Common/ConfirmDialog';
 
 const RecipesList = (props) => {
     const  protocolId  = props.protocolId;
-    const [recipes, setRecipes] = useRecipesState(protocolId);
+    const  patientId  = props.patientId;
+    const [recipes, setRecipes] = useRecipesState(protocolId, patientId);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [selectedRecipe, setSelectedRecipe] = useState();
     const { user } = useAuthContext();
-    const navigate = useNavigate();
 
-    
     Date.prototype.ddmmyyyy = function() {
         var mm = this.getMonth() + 1; // getMonth() is zero-based
         var dd = this.getDate();
@@ -43,9 +42,10 @@ const RecipesList = (props) => {
     return (
         <>
             <ConfirmDialog text={`Взехте ли тази рецепта за ${selectedRecipe ? selectedRecipe.medication:""} ?`} show={showDeleteDialog} onClose={() => {setShowDeleteDialog(false)}} onSave={deleteHandler} />
-            <h5>Рецепти:</h5>
+            {protocolId ? <h5>Рецепти:</h5>: ""}
             <ul>
-            {recipes && recipes.length > 0 ?recipes.map(x=>{
+            {recipes && recipes.length > 0 ? recipes.map(x=>{
+            if(x.protocolId === protocolId)
             return <li key={x._id}>{x.medication} до {new Date(x.endDate).ddmmyyyy()}
                     
                     <Link className="button" to="#" onClick={() => {setSelectedRecipe(x); setShowDeleteDialog(true)}}>Вземи рецепта</Link>

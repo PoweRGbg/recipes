@@ -9,6 +9,7 @@ import * as protocolService from '../../services/protocolService';
 import { Button } from 'react-bootstrap';
 import ConfirmDialog from '../Common/ConfirmDialog';
 import RecipesList  from '../RecipesList'
+import RecipesDashboard from "../RecipesDashboard/RecipesDashboard";
 
 const Details = () => {
     const navigate = useNavigate();
@@ -84,6 +85,7 @@ const Details = () => {
             <section id="details-page" className="details">
                 <div className="patient-information">
                     <h3>Име: {patient.name}</h3>
+                    <RecipesDashboard patientId={patient._id} />
                     <h3>Протоколи:</h3>
                         <ul className="list">
                             {protocols.map(x =>{ 

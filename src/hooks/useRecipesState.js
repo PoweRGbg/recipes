@@ -4,16 +4,23 @@ import * as recipeService from '../services/recipeService';
 import { useAuthContext } from '../contexts/AuthContext';
 
 
-const useRecipesState = (protocolId) => {
+const useRecipesState = (protocolId, patientId) => {
     const { user } = useAuthContext();
     const [recipes, setRecipes] = useState({});
 
     useEffect(() => {
-        recipeService.getByProtocol(protocolId, user.accessToken)
+        if(protocolId !== ""){
+            recipeService.getByProtocol(protocolId, user.accessToken)
             .then(recipesList => {
                 setRecipes(recipesList);
             })
-    }, [protocolId]);
+        } else 
+        recipeService.getByPatient(patientId, user.accessToken)
+        .then(recipesList => {
+            setRecipes(recipesList);
+        })
+    }, [protocolId, patientId]);
+        
 
     return [
         recipes,
