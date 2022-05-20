@@ -9,7 +9,6 @@ const ExpiringProtocols = () => {
     const daysAhead = 15;
     const nowDate = new Date();
     const dateAhead = new Date(nowDate.setDate(nowDate.getDate() + daysAhead));
-    console.log(dateAhead);
 
     Date.prototype.ddmmyyyy = function() {
         var mm = this.getMonth() + 1; // getMonth() is zero-based
@@ -35,7 +34,6 @@ const ExpiringProtocols = () => {
                     if(isValid(x.endDate) && new Date(x.endDate) <= dateAhead){
                         // get and set names
                             patientService.getOne(x.patientId).then(result =>{
-                                console.log("got name "+result.name);
                                 x.name = result.name;
                             });
                             filtered.push(x);

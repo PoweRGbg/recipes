@@ -8,7 +8,6 @@ const ExpiringRecipes = () => {
     const daysAhead = 15;
     const nowDate = new Date();
     const dateAhead = new Date(nowDate.setDate(nowDate.getDate() + daysAhead));
-    console.log(dateAhead);
 
     Date.prototype.ddmmyyyy = function() {
         var mm = this.getMonth() + 1; // getMonth() is zero-based
