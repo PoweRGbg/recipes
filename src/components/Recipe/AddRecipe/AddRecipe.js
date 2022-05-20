@@ -6,27 +6,17 @@ import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../contexts/AuthContext';
 import usePatientState from '../../../hooks/usePatientState';
-
+import ddmmyyyy from '../../../common/utils';
 
 const AddRecipe = () => { 
     const { user } = useAuthContext();
     const { protocolId, patientId } = useParams();
-    const [errors, setErrors] = useState({name: false})
-    const [patient, setPatient] = usePatientState(patientId);
+    const [errors] = useState({name: false})
+    const [patient] = usePatientState(patientId);
     const [protocol, setProtocol] = useState();
     const navigate = useNavigate();
     
-    Date.prototype.ddmmyyyy = function() {
-        var mm = this.getMonth() + 1; // getMonth() is zero-based
-        var dd = this.getDate();
-        
-        return [(dd>9 ? '' : '0') + dd,
-        (mm>9 ? '' : '0') + mm,
-        this.getFullYear()
-        
-    ].join('-');
-};
-const today = new Date().ddmmyyyy();
+const today = ddmmyyyy(new Date());
 
     useEffect(() => {
         console.log(`Patient is ${patient.name} ${patientId}`);
@@ -41,7 +31,7 @@ const today = new Date().ddmmyyyy();
             })
             
         }
-    }, []);
+    }, [patient.name, patientId, protocolId]);
     
 
     const addRecipeSubmitHandler = (e) => {
@@ -103,7 +93,7 @@ const today = new Date().ddmmyyyy();
         <section id="edit-page" className="edit">
             <form id="edit-form" method="POST" onSubmit={addRecipeSubmitHandler}>
                 <fieldset>
-                    <legend>Добави рецепта {protocol && protocol.medication != undefined ? "към протокол за " + protocol.medication:""} {patient ? `за ${patient.name}`:""}</legend>
+                    <legend>Добави рецепта {protocol && protocol.medication !== undefined ? "към протокол за " + protocol.medication:""} {patient ? `за ${patient.name}`:""}</legend>
                     <p className="field">
                         <label htmlFor="name">Лекарство</label>
                         <span className="input" style={{borderColor: errors.name ? 'red' : 'inherit'}}>
@@ -123,7 +113,7 @@ const today = new Date().ddmmyyyy();
                             <input name="validity" id="validity" defaultValue="30" />
                         </span>
                     </p>
-                    <div><label for="triple" className='label-check'>Това е тройна рецепта?
+                    <div><label htmlFor='triple' className='label-check'>Това е тройна рецепта?
                     <input className="checkbox-triple" type="checkbox" id="triple" name="triple"></input>
                     </label>
                     </div>

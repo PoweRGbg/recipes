@@ -1,3 +1,5 @@
+
+
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from 'react-router-dom';
 
@@ -6,10 +8,10 @@ import { useAuthContext } from '../../contexts/AuthContext';
 import usePatientState from '../../hooks/usePatientState';
 import * as protocolService from '../../services/protocolService';
 
-import { Button } from 'react-bootstrap';
 import ConfirmDialog from '../Common/ConfirmDialog';
 import RecipesList  from '../RecipesList'
 import RecipesDashboard from "../RecipesDashboard/RecipesDashboard";
+import ddmmyyyy from "../../common/utils";
 
 const Details = () => {
     const navigate = useNavigate();
@@ -20,16 +22,7 @@ const Details = () => {
     const [protocols, setProtocols] = useState([]);
 
     
-    Date.prototype.ddmmyyyy = function() {
-        var mm = this.getMonth() + 1; // getMonth() is zero-based
-        var dd = this.getDate();
-        
-        return [(dd>9 ? '' : '0') + dd,
-        (mm>9 ? '' : '0') + mm,
-        this.getFullYear()
-        
-    ].join('-');
-    };
+
 
     function isValid(protocolDate){
         return new Date(protocolDate).getTime() >= Date.now();
@@ -47,7 +40,7 @@ const Details = () => {
             .catch(err => {
                 console.log(err);
             })
-    }, [patient]);
+    }, [patient, user.accessToken]);
 
     const deleteHandler = (e) => {
         e.preventDefault();
@@ -91,18 +84,18 @@ const Details = () => {
                             {protocols.map(x =>{ 
 
                             return <div className="div-list-item" key={x._id}> 
-                                <li>За <b>{x.medication}</b> до {new Date(x.endDate).ddmmyyyy()}
+                                <li>За <b>{x.medication}</b> до {ddmmyyyy(new Date(x.endDate))}
                                     <a href={`/recipe/add/${x._id}`}>
-                                        <img className="protocolIcons" src="/images/icons/gui_add_icon.png" title="Добави рецепта"></img>
+                                        <img className="protocolIcons" src="/images/icons/gui_add_icon.png" alt="" title="Добави рецепта"></img>
                                     </a>
                                     <a href={`/protocol/renew/${x._id}`}>
-                                        <img className="protocolIcons" src="/images/icons/gui_redo_icon_157048.png" title="Поднови протокол"></img>
+                                        <img className="protocolIcons" src="/images/icons/gui_redo_icon_157048.png" alt="" title="Поднови протокол"></img>
                                     </a>
                                     <a href={`/protocol/edit/${x._id}`}>
-                                    <img className="protocolIcons" src="/images/icons/gui_edit_icon_157165.png" title="Редактирай протокол"></img>
+                                    <img className="protocolIcons" src="/images/icons/gui_edit_icon_157165.png" alt="" title="Редактирай протокол"></img>
                                     </a>
                                     <a href={`/protocol/delete/${x._id}`}>
-                                    <img className="protocolIcons" src="/images/icons/gui_delete_no_icon_157196.png" title="Премахни протокол"></img>
+                                    <img className="protocolIcons" src="/images/icons/gui_delete_no_icon_157196.png" alt="" title="Премахни протокол"></img>
                                     </a>
                                     <RecipesList protocolId={x._id} />
                                 </li>
@@ -111,7 +104,7 @@ const Details = () => {
                             )}
                         </ul>
                     <div className="actions">
-                        {user._id && (user._id == patient._ownerId
+                        {user._id && (user._id === patient._ownerId
                             ? ownerButtons
                             :<></>
                         )}

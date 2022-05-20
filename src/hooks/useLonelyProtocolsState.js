@@ -67,7 +67,7 @@ const useLonelyProtocolsState = (user) => {
                 })
             })
         });
-    }, []);
+    }, [user]);
 
     return [  
         lonelyProtocols,
