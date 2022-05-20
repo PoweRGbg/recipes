@@ -15,7 +15,7 @@ const Header = () => {
     let userNavigation = (
         <div id="user">
             <span>Здравей, {user.email}</span>
-            <Link className="button" to="/my-patients">Пациенти</Link>
+            <Link className="button" to="/dashboard">Пациенти</Link>
             <Link className="button" to="/create">Добави пациент</Link>
             <Link className="button" to="/logout">Излез</Link>
         </div>
@@ -25,7 +25,6 @@ const Header = () => {
         <header id="site-header">
             <nav className="navbar">
                 <section className="navbar-dashboard">
-                    <Link to="/dashboard">Табло</Link>
 
                     {user.email
                         ? userNavigation
