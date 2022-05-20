@@ -36,7 +36,7 @@ const Details = () => {
     }
 
     useEffect(() => {
-        protocolService.getByPatient(patient._id, user.accessToken)
+        protocolService.getAll(patient._id, user.accessToken)
             .then(result => {
                 let filtered = [];
                 result.forEach(x => {if(isValid(x.endDate))
@@ -90,8 +90,8 @@ const Details = () => {
                         <ul className="list">
                             {protocols.map(x =>{ 
 
-                            return <div className="div-list-item"> 
-                                <li key={x._id}>За <b>{x.medication}</b> до {new Date(x.endDate).ddmmyyyy()}
+                            return <div className="div-list-item" key={x._id}> 
+                                <li>За <b>{x.medication}</b> до {new Date(x.endDate).ddmmyyyy()}
                                     <a href={`/recipe/add/${x._id}`}>
                                         <img className="protocolIcons" src="/images/icons/gui_add_icon.png" title="Добави рецепта"></img>
                                     </a>

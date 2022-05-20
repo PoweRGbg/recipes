@@ -3,6 +3,7 @@ import './Dashboard.css';
 import { useAuthContext } from '../../contexts/AuthContext';
 import ExpiringProtocols from '../ExpiringProtocols/ExpiringProtocols';
 import ExpiringRecipes from '../ExpiringRecipes';
+import ProtocolsWithoutRecipes from '../ProtocolsWithoutRecipes/ProtocolsWithoutRecipes';
 
 const Dashboard = () => {
     const { user } = useAuthContext();
@@ -17,6 +18,7 @@ const Dashboard = () => {
 
             <ExpiringProtocols />
             <ExpiringRecipes />
+            <ProtocolsWithoutRecipes />
             </section>                    
         </section>
         
