@@ -7,17 +7,17 @@ const Header = () => {
 
     let guestNavigation = (
         <div id="guest">
-            <Link className="button" to="/login">Login</Link>
-            <Link to="/register" className="button">Register</Link>
+            <Link className="button" to="/login">Влез</Link>
+            <Link to="/register" className="button">Регистрация</Link>
         </div>
     );
 
     let userNavigation = (
         <div id="user">
-            <span>Welcome, {user.email}</span>
-            <Link className="button" to="/my-patients">My Patients</Link>
-            <Link className="button" to="/create">Add Patient</Link>
-            <Link className="button" to="/logout">Logout</Link>
+            <span>Здравей, {user.email}</span>
+            <Link className="button" to="/my-patients">Пациенти</Link>
+            <Link className="button" to="/create">Добави пациент</Link>
+            <Link className="button" to="/logout">Излез</Link>
         </div>
     );
 
@@ -25,7 +25,7 @@ const Header = () => {
         <header id="site-header">
             <nav className="navbar">
                 <section className="navbar-dashboard">
-                    <Link to="/dashboard">Dashboard</Link>
+                    <Link to="/dashboard">Табло</Link>
 
                     {user.email
                         ? userNavigation
