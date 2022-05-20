@@ -1,8 +1,16 @@
 import useLonelyProtocolsState from "../../hooks/useLonelyProtocolsState";
+import { useEffect, useState } from "react";
+import * as recipeService from '../../services/recipeService';
+import * as protocolService from '../../services/protocolService';
+import * as patientService from '../../services/patientService';
+import { useAuthContext } from '../../contexts/AuthContext';
+
+
 
 
 const ProtocolsWithoutRecipes = () => {
-    const [protocols] = useLonelyProtocolsState([]);
+    const { user } = useAuthContext(); 
+    const [lonelyProtocols] = useLonelyProtocolsState(user);
 
 
     Date.prototype.ddmmyyyy = function() {
@@ -17,13 +25,12 @@ const ProtocolsWithoutRecipes = () => {
     };
 
 
-
     return (
         <><div>Протоколи без рецепти:<ul>
             
-            {protocols && protocols.length > 0 ? protocols.map(x=>{
-                console.log(`Lonely protocols in Dashboard ${protocols.length}`);
-                return <li key={x._id}> На {x.patientName} за лекарство {x.medication} на дата {new Date(x.endDate).ddmmyyyy()}</li> 
+            {lonelyProtocols && lonelyProtocols.length > 0 ? lonelyProtocols.map(x=>{
+                console.log(`Lonely protocols in Dashboard ${lonelyProtocols.length}`);
+                return <li key={x._id}> На {x.patientName} за лекарство {x.medication} </li> 
             }):"Няма такива"} 
             
             </ul></div>

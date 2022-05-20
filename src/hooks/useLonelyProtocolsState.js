@@ -3,56 +3,75 @@ import { useState, useEffect } from 'react';
 import * as recipeService from '../services/recipeService';
 import * as protocolService from '../services/protocolService';
 import * as patientService from '../services/patientService';
-import { useAuthContext } from '../contexts/AuthContext';
 
-const useLonelyProtocolsState = (protocolId, patientId) => {
-    const [protocols, setProtocols] = useState({});
-    const { user } = useAuthContext(); 
-
+const useLonelyProtocolsState = (user) => {
+    const [lonelyProtocols, setLonelyProtocols] = useState([]);
+    let lonelyProtocolsFound = [];
 
     function isValid(protocolDate){
         return new Date(protocolDate).getTime() >= Date.now();
     }
-        
     useEffect(() => {
-        protocolService.getAll()
-            .then(result => {
-                let filteredProtocols = [];
-                result.forEach(x => {
-                    if(isValid(x.endDate)){
-                            patientService.getOne(x.patientId).then(result =>{
-                                x.name = result.name;
-                            }); 
-                            filteredProtocols.push(x);
-                    }
-                    //
-                });
-                // check for recipes for each protocol
-                let lonelyProtocols = [];
-                filteredProtocols.forEach(protocol => {
-                    recipeService.getByProtocol(protocol._id, user.accessToken)
-                    .then(result =>{
-                        console.log(`На ${protocol.patientName} протокол за ${protocol.medication} рецепти ${result.length}`);
-                        if( result.length === 0){
-                            lonelyProtocols.push(protocol);
-                            console.log(`Lonely protocols are now: ${lonelyProtocols.length}`);
-                        }
-                    }).then(() =>{
-                        if(lonelyProtocols.length > 0)
-                        setProtocols(lonelyProtocols);
+        console.log(`Entering`);
+        patientService.getByOwnerId(user._id, user.accessToken).then(patients =>{
+            console.log(`Patients are ${patients.length}`);
+            patients.forEach(patient =>{
+                console.log(`Got patient ${patient.name}`);
 
-                    });
-                });
-                
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    },  [user.accessToken]);
+                protocolService.getByPatient(patient._id, user.accessToken).then(protocols =>{
+                    protocols.forEach(protocol =>{
+                        console.log(`Checking protocol for ${protocol.medication}`);
+                        recipeService.getByProtocol(protocol._id, user.accessToken).then(recipes =>{
+                            let validRecipes = [];
+                            console.log(`Recipes are ${recipes.length}`);
+                            recipes.forEach(x =>{
+                                if(isValid(x.endDate)){
+                                    validRecipes.push(x);
+                                }
 
-    return [
-        protocols,
-        setProtocols
+                            });
+                            console.log(`Valid are ${validRecipes.length}`);
+
+                            if(validRecipes.length === 0){
+                                // protocol is lonely
+                                let oldState = [...lonelyProtocols];
+                                let alreadyIn = false;
+                                oldState.forEach(x =>{
+                                    if(x._id === protocol._id){
+                                        alreadyIn = true;
+                                    }
+                                });
+                                if(!alreadyIn){
+                                    oldState.push(protocol);
+                                    console.log(`Adding ${protocol.medication}`);
+                                    lonelyProtocolsFound.push(protocol);
+                                    setLonelyProtocols(oldState);
+                                    
+                                    console.log(`Protocols are now ${lonelyProtocolsFound}`);
+                                } else {
+                                    console.log(`Protocol for ${protocol.medication}  already in collection`);
+                                }
+                            }
+
+                        }).finally(()=>{ 
+
+                            if(lonelyProtocolsFound.length > 0){
+                                console.log(`Adding protocols ${lonelyProtocolsFound.length}`);
+                                setLonelyProtocols(lonelyProtocolsFound);
+                            } else {
+                                console.log(`No new protocols found`);
+                            } 
+                        })
+                    });  
+                    
+                })
+            })
+        });
+    }, []);
+
+    return [  
+        lonelyProtocols,
+        setLonelyProtocols
     ]
 };
 

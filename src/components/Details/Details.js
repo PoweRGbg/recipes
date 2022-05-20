@@ -15,7 +15,7 @@ const Details = () => {
     const navigate = useNavigate();
     const { user } = useAuthContext();
     const { patientId } = useParams();
-    const [patient, setPatient] = usePatientState(patientId);
+    const [patient] = usePatientState(patientId);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [protocols, setProtocols] = useState([]);
 
