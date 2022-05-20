@@ -1,10 +1,10 @@
-const ddmmyyyy = function() {
-    var mm = this.getMonth() + 1; // getMonth() is zero-based
-    var dd = this.getDate();
+const ddmmyyyy = function(date) {
+    var mm = date.getMonth() + 1; // getMonth() is zero-based
+    var dd = date.getDate();
     
     return [(dd>9 ? '' : '0') + dd,
     (mm>9 ? '' : '0') + mm,
-    this.getFullYear()
+    date.getFullYear()
     
 ].join('-');
 };
