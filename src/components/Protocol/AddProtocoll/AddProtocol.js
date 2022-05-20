@@ -2,29 +2,20 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import * as protocolService from '../../../services/protocolService';
 import * as patientService from '../../../services/patientService';
-import usePatientState from '../../../hooks/useRecipesState';
+import usePatientState from '../../../hooks/usePatientState';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../contexts/AuthContext';
+import ddmmyyyy from '../../../common/utils';
 
 const AddProtocol = () => { 
     const { user } = useAuthContext();
     const { patientId } = useParams();
-    const [errors, setErrors] = useState({name: false})
+    const [errors] = useState({name: false})
     const [patient] = usePatientState(patientId);
     const navigate = useNavigate();
     
-    Date.prototype.ddmmyyyy = function() {
-        var mm = this.getMonth() + 1; // getMonth() is zero-based
-        var dd = this.getDate();
-        
-        return [(dd>9 ? '' : '0') + dd,
-        (mm>9 ? '' : '0') + mm,
-        this.getFullYear()
-        
-    ].join('-');
-};
-const today = new Date().ddmmyyyy();
+const today = ddmmyyyy(new Date());
 
     const addProtocolSubmitHandler = (e) => {
         e.preventDefault();
@@ -41,6 +32,7 @@ const today = new Date().ddmmyyyy();
 
         if(patientName == ""){
             patientService.getOne(patientId).then(result =>{
+                console.log(`Got name of ${patientName}`);
                 patientName = result.name;
                 protocolService.create({
                     patientId,
