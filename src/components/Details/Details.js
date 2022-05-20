@@ -29,7 +29,8 @@ const Details = () => {
     }
 
     useEffect(() => {
-        protocolService.getAll(patient._id, user.accessToken)
+        console.log(`Patient id is ${patientId}`);
+        protocolService.getByPatient(patientId, user.accessToken)
             .then(result => {
                 let filtered = [];
                 result.forEach(x => {if(isValid(x.endDate))
@@ -40,7 +41,7 @@ const Details = () => {
             .catch(err => {
                 console.log(err);
             })
-    }, [patient, user.accessToken]);
+    });
 
     const deleteHandler = (e) => {
         e.preventDefault();
