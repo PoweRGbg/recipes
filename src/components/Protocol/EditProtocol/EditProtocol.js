@@ -4,38 +4,25 @@ import * as protocolService from '../../../services/protocolService';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../contexts/AuthContext';
+import ddmmyyyy from '../../../common/utils';
 
 const EditProtocol = () => { 
     const { user } = useAuthContext();
     const { protocolId } = useParams();
-    const [errors, setErrors] = useState({name: false})
+    const [errors] = useState({name: false})
     const navigate = useNavigate();
     const [protocol, setProtocol] = useState();
 
     useEffect(() => {
-        console.log(protocolId);
         protocolService.getOne(protocolId)
             .then(result => {
-                console.log(result);
                 setProtocol(result);
             })
             .catch(err => {
                 console.log(err);
             })
-    }, []);
+    });
     
-    Date.prototype.ddmmyyyy = function() {
-        var mm = this.getMonth() + 1; // getMonth() is zero-based
-        var dd = this.getDate();
-        
-        return [(dd>9 ? '' : '0') + dd,
-        (mm>9 ? '' : '0') + mm,
-        this.getFullYear()
-        
-    ].join('-');
-};
-const today = new Date().ddmmyyyy();
-
     const editProtocolSubmitHandler = (e) => {
         e.preventDefault();
 
@@ -48,7 +35,6 @@ const today = new Date().ddmmyyyy();
         let medication = formData.get('medication');
         let start = formData.get('start').split("-");
         let end = formData.get('endDate').split("-");
-        let validity = Number(formData.get('validity'));
         let startDate = new Date(start[2], Number(start[1])-1, start[0]);
         let endDate = new Date(end[2], Number(end[1])-1, end[0]);
 
@@ -87,13 +73,13 @@ const today = new Date().ddmmyyyy();
                     <p className="field">
                         <label htmlFor="description">Начална дата</label>
                         <span className="input">
-                            <input name="start" id="start" defaultValue={protocol != undefined?new Date(protocol.startDate).ddmmyyyy():""}/>
+                            <input name="start" id="start" defaultValue={protocol !== undefined?ddmmyyyy(new Date(protocol.startDate)):""}/>
                         </span>
                     </p>
                     <p className="field">
                         <label htmlFor="validity">Крайна дата </label>
                         <span className="input">
-                            <input name="endDate" id="endDate"  defaultValue={protocol != undefined?new Date(protocol.endDate).ddmmyyyy():""}/>
+                            <input name="endDate" id="endDate"  defaultValue={protocol !== undefined?ddmmyyyy(new Date(protocol.endDate)):""}/>
                         </span>
                     </p>
                     {protocol != undefined?<input type="hidden" name='patientID' value={protocol.patientId}></input>:""}
