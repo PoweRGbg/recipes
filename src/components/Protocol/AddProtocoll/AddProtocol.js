@@ -28,9 +28,15 @@ const today = ddmmyyyy(new Date());
         let start = formData.get('start').split("-");
         let validity = Number(formData.get('validity'));
         let startDate = new Date(start[2], Number(start[1])-1, start[0]);
-        let endDate = new Date(startDate.setDate(startDate.getDate() + validity));
+        startDate.setDate(start[0]);
+        startDate.setMonth(start[1]-1);
+        startDate.setFullYear(start[2]);
+        let endDate = new Date();
+        endDate.setDate(startDate.getDate() + validity);
 
-        if(patientName == ""){
+        console.log(`Start is ${startDate} -> ${endDate}`);
+
+        if(patientName === ""){
             patientService.getOne(patientId).then(result =>{
                 console.log(`Got name of ${patientName}`);
                 patientName = result.name;
@@ -65,7 +71,7 @@ const today = ddmmyyyy(new Date());
         <section id="edit-page" className="edit">
             <form id="edit-form" method="POST" onSubmit={addProtocolSubmitHandler}>
                 <fieldset>
-                    <legend>Добави протокол за пациент {patient.name}</legend>
+                    <legend>Добави протокол на {patient.name}</legend>
                     <p className="field">
                         <label htmlFor="name">Лекарство</label>
                         <span className="input" style={{borderColor: errors.name ? 'red' : 'inherit'}}>
