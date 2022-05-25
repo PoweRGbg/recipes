@@ -40,8 +40,8 @@ const today = ddmmyyyy(new Date());
         
         let formData = new FormData(e.currentTarget);
         
-        let patientId = patient ? patient._id : formData.get('patientID');
-        let patientName = patient ? patient.name : formData.get('patientName');
+        let patientId = formData.get('patientID') ? formData.get('patientID'): patient?._id;
+        let patientName = formData.get('patientName') ? formData.get('patientName'): patient?.name;
         let protocolId = formData.get('protocolId');
         let medication = formData.get('medication');
         let triple = formData.get('triple');
@@ -50,8 +50,8 @@ const today = ddmmyyyy(new Date());
         let startDate = new Date(start[2], Number(start[1])-1, start[0]);
         let endDate = new Date(startDate.setDate(startDate.getDate() + validity));
         
-        console.log(`Adding recipe for ${medication} patient ${patient.name} ${triple}`);
-        //add single or tripple recipe
+        console.log(`Adding recipe for ${medication} patient ${patientName} ${triple} ${patientId}`);
+        // add single or tripple recipe
         if(triple){
             for (let index = 1;index < 4;index++) {
                 if(index !== 1){
