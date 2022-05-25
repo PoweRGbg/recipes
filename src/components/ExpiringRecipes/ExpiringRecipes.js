@@ -42,7 +42,7 @@ const ExpiringRecipes = () => {
     }, []);
 
     return (
-        <><div>Невзети рецепти в следващите {daysAhead} дни<ul>
+        <><div><h4>Невзети рецепти в следващите {daysAhead} дни</h4><ul>
             
             {recipes && recipes.length > 0 ? recipes.map(x=>{
                 return <li key={x._id}> На {x.patientName} за лекарство {x.medication} на дата {new Date(x.endDate).ddmmyyyy()}</li> 

@@ -7,7 +7,7 @@ const ProtocolsWithoutRecipes = () => {
 
 
     return (
-        <><div>Протоколи без рецепти:<ul>
+        <><div><h4>Протоколи без рецепти:</h4><ul>
             
             {lonelyProtocols && lonelyProtocols.length > 0 ? lonelyProtocols.map(x=>{
                 console.log(`Lonely protocols in Dashboard ${lonelyProtocols.length}`);

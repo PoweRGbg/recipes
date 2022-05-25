@@ -10,13 +10,14 @@ const Dashboard = () => {
     return (
         <>
 
-        <section id="details-page" className="details">
-            <h2>Предстоящи събития</h2>
+        <section id="details-page" className="dashboard">
+            <h1>Предстоящи събития</h1>
             <section>
-
-            <ExpiringProtocols />
-            <ExpiringRecipes />
-            <ProtocolsWithoutRecipes />
+            <ul class="other-patients-list">
+            <li class="otherPet"><ExpiringProtocols /></li>
+            <li class="otherPet"><ExpiringRecipes /></li>
+            <li class="otherPet"><ProtocolsWithoutRecipes /></li>
+            </ul>
             </section>                    
         </section>
         

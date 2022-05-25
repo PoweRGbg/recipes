@@ -47,7 +47,7 @@ const ExpiringProtocols = () => {
     }, []);
 
     return (
-        <><div>Изтичащи протоколи в следващите {daysAhead} дни<ul>
+        <><div><h4>Изтичащи протоколи в следващите {daysAhead} дни</h4><ul>
             
             {protocols && protocols.length > 0 ? protocols.map(x=>{
                 return <li key={x._id}> На {x.patientName} за лекарство {x.medication} на дата {new Date(x.endDate).ddmmyyyy()}</li> 
