@@ -41,7 +41,7 @@ const Details = () => {
             .catch(err => {
                 console.log(err);
             })
-    });
+    }, [patientId]);
 
     const deleteHandler = (e) => {
         e.preventDefault();
