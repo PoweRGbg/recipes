@@ -1,8 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
+import { useEffect, useState } from "react";
 
 import { AuthProvider } from './contexts/AuthContext';
+import { MongoContext } from './contexts/MongoContext';
+import Authentication  from './components/Authentication/Authentication'
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
+import Home from './components/Home';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import Register from './components/Register';
@@ -19,10 +23,34 @@ import Details from './components/Details';
 import ErrorBoundary from './components/Common/ErrorBoundary';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import RenewProtocol from './components/Protocol/RenewProtocol';
+import * as Realm from 'realm-web';
 
 function App() {
+  const [client, setClient] = useState(null);
+  const [user, setUser] = useState(null);
+  const [app, setApp] = useState(new Realm.App({id: "recipes-tmpij"}));
+
+  useEffect(() => {
+    async function init () {
+      if (!user) {
+        setUser(app.currentUser ? app.currentUser : await app.logIn(Realm.Credentials.anonymous()))
+      }
+
+      if (!client) {
+        setClient(app.currentUser.mongoClient('mongodb-atlas'))
+      }
+    }
+
+    init();
+  }, [app, client, user]);
+
+  function renderComponent (Component, additionalProps = {}) {
+    return <MongoContext.Consumer>{(mongoContext) => <Component mongoContext={mongoContext} {...additionalProps} />}</MongoContext.Consumer>
+  };
+
   return (
     <ErrorBoundary>
+      <MongoContext.Provider value={{app, client, user, setClient, setUser, setApp}}>
       <AuthProvider>
         <div id="container">
           <Header />
@@ -31,6 +59,9 @@ function App() {
             <Routes>
               <Route path="/dashboard/*" element={<Dashboard />} />
               <Route path="/dash" element={<Dashboard />} />
+              <Route path="/signup" element={renderComponent(Authentication, {type: 'create'})} />
+              <Route path="/signin" element={renderComponent(Authentication)} />
+              <Route path="/home" element={renderComponent(Home)} />
               <Route path="/login" element={<Login />} />
               <Route path="/logout" element={<Logout />} />
               <Route path="/register" element={<Register />} />
@@ -53,6 +84,7 @@ function App() {
           </footer>
         </div>
       </AuthProvider>
+      </MongoContext.Provider>
     </ErrorBoundary>
   );
 }
