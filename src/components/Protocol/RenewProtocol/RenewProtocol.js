@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import * as protocolService from '../../../services/protocolService';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import {ddmmyyyy} from "../../../common/utils.js";
 import { useAuthContext } from '../../../contexts/AuthContext';
 
 const RenewProtocol = () => { 
@@ -24,17 +25,8 @@ const RenewProtocol = () => {
             })
     }, []);
     
-    Date.prototype.ddmmyyyy = function() {
-        var mm = this.getMonth() + 1; // getMonth() is zero-based
-        var dd = this.getDate();
-        
-        return [(dd>9 ? '' : '0') + dd,
-        (mm>9 ? '' : '0') + mm,
-        this.getFullYear()
-        
-    ].join('-');
-};
-const today = new Date().ddmmyyyy();
+
+const today = ddmmyyyy(new Date());
 
 const addProtocolSubmitHandler = (e) => {
     e.preventDefault();

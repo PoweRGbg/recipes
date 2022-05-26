@@ -11,7 +11,7 @@ import * as protocolService from '../../services/protocolService';
 import ConfirmDialog from '../Common/ConfirmDialog';
 import RecipesList  from '../RecipesList'
 import RecipesDashboard from "../RecipesDashboard/RecipesDashboard";
-import ddmmyyyy from "../../common/utils";
+import {ddmmyyyy} from "../../common/utils";
 
 const Details = () => {
     const navigate = useNavigate();

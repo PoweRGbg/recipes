@@ -5,6 +5,8 @@ import * as recipeService from '../../services/recipeService';
 import useRecipesState from '../../hooks/useRecipesState';
 import { useAuthContext } from '../../contexts/AuthContext';
 import ConfirmDialog from '../Common/ConfirmDialog';
+import {ddmmyyyy} from "../../common/utils.js";
+
 
 const RecipesList = (props) => {
     const  protocolId  = props.protocolId;
@@ -13,17 +15,6 @@ const RecipesList = (props) => {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [selectedRecipe, setSelectedRecipe] = useState();
     const { user } = useAuthContext();
-
-    Date.prototype.ddmmyyyy = function() {
-        var mm = this.getMonth() + 1; // getMonth() is zero-based
-        var dd = this.getDate();
-        
-        return [(dd>9 ? '' : '0') + dd,
-        (mm>9 ? '' : '0') + mm,
-        this.getFullYear()
-        
-    ].join('-');
-    };
 
     const deleteHandler = (e) => {
         e.preventDefault();
@@ -42,7 +33,7 @@ const RecipesList = (props) => {
             <ul>
             {recipes && recipes.length > 0 ? recipes.map(x=>{
             if(x.protocolId === protocolId)
-            return <li key={x._id}>{x.medication} до {new Date(x.endDate).ddmmyyyy()}
+            return <li key={x._id}>{x.medication} до {ddmmyyyy(new Date(x.endDate))}
                     
                     <Link className="button" to="#" onClick={() => {setSelectedRecipe(x); setShowDeleteDialog(true)}}>Вземи рецепта</Link>
             </li>

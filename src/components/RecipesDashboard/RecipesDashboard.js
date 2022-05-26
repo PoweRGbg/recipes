@@ -8,6 +8,8 @@ import * as recipeService from '../../services/recipeService';
 
 import ConfirmDialog from '../Common/ConfirmDialog';
 import RecipesList  from '../RecipesList'
+import ddmmyyyy from "../../common/utils.js";
+
 // Show list of recipes without protocol
 const RecipesDashboard = (props) => {
     const navigate = useNavigate();
@@ -17,17 +19,6 @@ const RecipesDashboard = (props) => {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [recipes, setReciepes] = useState([]);
 
-    
-    Date.prototype.ddmmyyyy = function() {
-        var mm = this.getMonth() + 1; // getMonth() is zero-based
-        var dd = this.getDate();
-        
-        return [(dd>9 ? '' : '0') + dd,
-        (mm>9 ? '' : '0') + mm,
-        this.getFullYear()
-        
-    ].join('-');
-    };
 
     function isValid(protocolDate){
         return new Date(protocolDate).getTime() >= Date.now();

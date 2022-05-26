@@ -6,7 +6,7 @@ import usePatientState from '../../../hooks/usePatientState';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../contexts/AuthContext';
-import ddmmyyyy from '../../../common/utils';
+import {ddmmyyyy} from '../../../common/utils';
 
 const AddProtocol = () => { 
     const { user } = useAuthContext();

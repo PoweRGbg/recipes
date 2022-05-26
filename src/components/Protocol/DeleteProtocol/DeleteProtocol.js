@@ -5,7 +5,7 @@ import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../contexts/AuthContext';
 import ConfirmDialog from '../../Common/ConfirmDialog';
-
+import {ddmmyyyy} from "../../../common/utils.js";
 
 const DeleteProtocol = () => { 
     const { user } = useAuthContext();
@@ -28,17 +28,8 @@ const DeleteProtocol = () => {
             })
     }, []);
     
-    Date.prototype.ddmmyyyy = function() {
-        var mm = this.getMonth() + 1; // getMonth() is zero-based
-        var dd = this.getDate();
-        
-        return [(dd>9 ? '' : '0') + dd,
-        (mm>9 ? '' : '0') + mm,
-        this.getFullYear()
-        
-    ].join('-');
-};
-const today = new Date().ddmmyyyy();
+
+const today = ddmmyyyy(new Date());
 
     const DeleteProtocolHandler = (e) => {
         e.preventDefault();
