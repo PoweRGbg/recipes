@@ -13,10 +13,10 @@ const Dashboard = () => {
         <section id="details-page" className="dashboard">
             <h1>Предстоящи събития</h1>
             <section>
-            <ul class="other-patients-list">
-            <li class="otherPet"><ExpiringProtocols /></li>
-            <li class="otherPet"><ExpiringRecipes /></li>
-            <li class="otherPet"><ProtocolsWithoutRecipes /></li>
+            <ul className="other-patients-list">
+            <li className="otherPet"><ExpiringProtocols /></li>
+            <li className="otherPet"><ExpiringRecipes /></li>
+            <li className="otherPet"><ProtocolsWithoutRecipes /></li>
             </ul>
             </section>                    
         </section>
