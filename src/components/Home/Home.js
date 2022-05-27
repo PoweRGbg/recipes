@@ -5,7 +5,6 @@ import * as Realm from 'realm-web';
 
 const Home = ({mongoContext: {client, user}}) => {
     const [patients, setPatients] = useState([]);
-    const app = new Realm.App({id: "recipes-tmpij"});
 
     useEffect(() => {
         async function getData () {

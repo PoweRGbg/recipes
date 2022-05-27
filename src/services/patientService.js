@@ -1,8 +1,9 @@
 import { request } from './requester';
 
-const baseUrl = 'http://localhost:3030/data';
+const baseUrl = 'https://eu-central-1.aws.data.mongodb-api.com/app/app2-bqvvg/endpoint/patients?secret=user';
 
-export const getAll = () => request(`${baseUrl}/patients`)
+export const getAll = () => request(`${baseUrl}`)
+
 
 export const create = async (patientData, token) => {
     let response = await fetch(`${baseUrl}/patients`, {

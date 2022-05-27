@@ -37,7 +37,7 @@ function App() {
       }
 
       if (!client) {
-        setClient(app.currentUser.mongoClient('mongodb-atlas'))
+        setClient(app.currentUser.mongoClient('mongodb-atlas'));
       }
     }
 
@@ -53,29 +53,29 @@ function App() {
       <MongoContext.Provider value={{app, client, user, setClient, setUser, setApp}}>
       <AuthProvider>
         <div id="container">
-          <Header />
+          {renderComponent(Header)}
 
           <main id="site-content">
             <Routes>
-              <Route path="/dashboard/*" element={<Dashboard />} />
+              <Route path="/dashboard/*" element={renderComponent(Dashboard)} />
               <Route path="/dash" element={<Dashboard />} />
               <Route path="/signup" element={renderComponent(Authentication, {type: 'create'})} />
               <Route path="/signin" element={renderComponent(Authentication)} />
               <Route path="/home" element={renderComponent(Home)} />
               <Route path="/login" element={<Login />} />
-              <Route path="/logout" element={<Logout />} />
+              <Route path="/logout" element={renderComponent(Logout)} />
               <Route path="/register" element={<Register />} />
               <Route path="/my-patients" element={<MyPatients />} />
-              <Route path="/create" element={<Create />} />
+              <Route path="/create" element={renderComponent(Create)} />
               <Route path="/edit/:patientId" element={<Edit />} />
-              <Route path="/protocol/add/:patientId" element={<AddProtocol />} />
+              <Route path="/protocol/add/:patientId" element={renderComponent(AddProtocol)} />
               <Route path="/protocol/edit/:protocolId" element={<EditProtocol />} />
               <Route path="/protocol/delete/:protocolId" element={<DeleteProtocol />} />
               <Route path="/protocol/renew/:protocolId" element={<RenewProtocol />} />
               <Route path="/recipe/add/:protocolId" element={<AddRecipe />} />
               <Route path="/recipe/add_recipe/:patientId" element={<AddRecipe />} />
               <Route path="/recipeslist/:protocolId" element={<RecipesList />} />
-              <Route path="/details/:patientId" element={<Details />} />
+              <Route path="/details/:patientId" element={renderComponent(Details)} />
             </Routes>
           </main>
 

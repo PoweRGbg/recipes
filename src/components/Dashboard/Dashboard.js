@@ -3,9 +3,13 @@ import './Dashboard.css';
 import ExpiringProtocols from '../ExpiringProtocols/ExpiringProtocols';
 import ExpiringRecipes from '../ExpiringRecipes';
 import ProtocolsWithoutRecipes from '../ProtocolsWithoutRecipes/ProtocolsWithoutRecipes';
+import { MongoContext } from '../../contexts/MongoContext';
 
 const Dashboard = () => {
 
+    function renderComponent (Component, additionalProps = {}) {
+        return <MongoContext.Consumer>{(mongoContext) => <Component mongoContext={mongoContext} {...additionalProps} />}</MongoContext.Consumer>
+      };
 
     return (
         <>
@@ -13,11 +17,11 @@ const Dashboard = () => {
         <section id="details-page" className="dashboard">
             <h1>Предстоящи събития</h1>
             <section>
-            <ul className="other-patients-list">
-            <li className="otherPet"><ExpiringProtocols /></li>
-            <li className="otherPet"><ExpiringRecipes /></li>
-            <li className="otherPet"><ProtocolsWithoutRecipes /></li>
-            </ul>
+            {/* <ul className="other-patients-list">
+            <li className="otherPet">{renderComponent(ExpiringProtocols)}</li>
+            <li className="otherPet">{renderComponent(ExpiringRecipes)}</li>
+            <li className="otherPet">{renderComponent(ProtocolsWithoutRecipes)}</li>
+            </ul> */}
             </section>                    
         </section>
         
@@ -25,7 +29,7 @@ const Dashboard = () => {
             <h1>Пациенти</h1>
 
             <section>
-                <PatientList />
+                {renderComponent(PatientList)}
             </section>
         </section>
         </>

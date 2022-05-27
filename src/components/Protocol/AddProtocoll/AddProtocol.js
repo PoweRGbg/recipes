@@ -8,8 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../contexts/AuthContext';
 import {ddmmyyyy} from '../../../common/utils';
 
-const AddProtocol = () => { 
-    const { user } = useAuthContext();
+const AddProtocol = ({mongoContext}) => { 
+    const user  = mongoContext.app.currentUser;
     const { patientId } = useParams();
     const [errors] = useState({name: false})
     const [patient] = usePatientState(patientId);

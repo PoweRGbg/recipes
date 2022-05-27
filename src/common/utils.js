@@ -1,3 +1,6 @@
+import { MongoContext } from '../contexts/MongoContext';
+
+
 export const ddmmyyyy = function(date) {
     console.log(date);
     var mm = date?.getMonth() + 1; // getMonth() is zero-based
@@ -12,5 +15,9 @@ export const ddmmyyyy = function(date) {
 
 export const isAnon = function(user) {
         return !user || user.identities[0].providerType === 'anon-user'
+    };
+
+export const renderComponent = function(Component, additionalProps = {}) {
+        return <MongoContext.Consumer>{(mongoContext) => <Component mongoContext={mongoContext} {...additionalProps} />}</MongoContext.Consumer>
     };
 

@@ -4,8 +4,9 @@ import * as protocolService from '../../../services/protocolService';
 import { useAuthContext } from '../../../contexts/AuthContext';
 
 
+
 const PatientCard = ({
-    patient
+    patient,
 }) => {
     
     const { user } = useAuthContext();

@@ -1,9 +1,6 @@
-import { Formik } from 'formik'
-import { Button, Form } from 'react-bootstrap'
 import * as yup from 'yup'
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import Loading from '../Loading/Loading.js'
 import * as Realm from 'realm-web';
 import {isAnon} from '../../common/utils'
 

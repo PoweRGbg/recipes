@@ -2,11 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import * as patientService from '../../services/patientService';
 import { useAuthContext } from '../../contexts/AuthContext';
 
-const Create = () => {
-    const { user } = useAuthContext();
+const Create = ({mongoContext: {client, user}}) => {
     const navigate = useNavigate();
 
-    const onPatientCreate = (e) => {
+    const onPatientCreate = async (e) => {
         e.preventDefault();
         let formData = new FormData(e.currentTarget);
 
@@ -14,29 +13,26 @@ const Create = () => {
         let age = formData.get('age');
         let meds = [];
 
-        patientService.create({
-            name,
-            age,
-            meds,
-        }, user.accessToken)
-            .then(result => {
-                navigate('/dashboard');
-            })
+        // 
+        const collection = client.db('recipes').collection('patients');
+        collection.insertOne({"name":name, "age": age, "meds": meds}, function(err, res) {
+            if (err) alert(err);
+          });
     }
 
     return (
         <section id="create-page" className="create">
             <form id="create-form" onSubmit={onPatientCreate} method="POST">
                 <fieldset>
-                    <legend>Add new Patient</legend>
+                    <legend>Добави нов пациент</legend>
                     <p className="field">
-                        <label htmlFor="name">Name</label>
+                        <label htmlFor="name">Име</label>
                         <span className="input">
                             <input type="text" name="name" id="name" placeholder="Name" />
                         </span>
                     </p>
                     <p className="field">
-                        <label htmlFor="age">Age</label>
+                        <label htmlFor="age">Възраст</label>
                         <span className="input">
                             <input type="number" name="age" id="age" placeholder="age" ></input>
                         </span>
@@ -44,7 +40,7 @@ const Create = () => {
                 
 
                    
-                    <input className="button submit" type="submit" value="Add patient" />
+                    <input className="button submit" type="submit" value="Добави пациент" />
                 </fieldset>
             </form>
         </section>
