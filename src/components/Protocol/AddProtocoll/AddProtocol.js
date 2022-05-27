@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import * as protocolService from '../../../services/protocolService';
 import * as patientService from '../../../services/patientService';
@@ -6,14 +6,24 @@ import usePatientState from '../../../hooks/usePatientState';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../contexts/AuthContext';
+import { BSON } from 'realm-web';
 import {ddmmyyyy} from '../../../common/utils';
 
 const AddProtocol = ({mongoContext}) => { 
     const user  = mongoContext.app.currentUser;
     const { patientId } = useParams();
     const [errors] = useState({name: false})
-    const [patient] = usePatientState(patientId);
+    const [patient, setPatient] = usePatientState(patientId);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        async function getPatient(){
+            const patientsFromDB = mongoContext.client.db('recipes').collection('patients');
+            let patient = await patientsFromDB.find({"_id": new BSON.ObjectID(patientId)});
+            setPatient(patient[0]);
+        }
+        getPatient();
+    }, [patientId]);
     
 const today = ddmmyyyy(new Date());
 
@@ -34,37 +44,19 @@ const today = ddmmyyyy(new Date());
         let endDate = new Date();
         endDate.setDate(startDate.getDate() + validity);
 
-        console.log(`Start is ${startDate} -> ${endDate}`);
-
-        if(patientName === ""){
-            patientService.getOne(patientId).then(result =>{
-                console.log(`Got name of ${patientName}`);
-                patientName = result.name;
-                protocolService.create({
-                    patientId,
-                    patientName,
-                    medication,
-                    startDate,
-                    endDate
-                }, user.accessToken)
-                    .then(result => {
-                        navigate(`/details/${patientId}`);
-                    })
-            });
-
-        } else {
-            protocolService.create({
-                patientId,
-                patientName,
-                medication,
-                startDate,
-                endDate
-            }, user.accessToken)
-                .then(result => {
-                    navigate(`/details/${patientId}`);
-                })
-        }
-
+        console.log(`Patient is ${JSON.stringify(patient)}`);
+        const collection = mongoContext.client.db('recipes').collection('protocols');
+        collection.insertOne({
+            "patientId":patientId, 
+            "patientName":patientName, 
+            "medication": medication, 
+            "startDate": ""+startDate.getTime(),
+            "endDate": ""+endDate.getTime()
+        }, function(err, res) {
+            if (err) alert(err);
+        });
+        navigate(`/details/${patientId}`);
+        
     }
 
     return (
