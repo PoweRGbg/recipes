@@ -1,37 +1,44 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import * as recipeService from '../../../services/recipeService';
-import * as protocolService from '../../../services/protocolService';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../../../contexts/AuthContext';
 import usePatientState from '../../../hooks/usePatientState';
+import { BSON } from 'realm-web';
 import {ddmmyyyy} from '../../../common/utils';
 
-const AddRecipe = () => { 
-    const { user } = useAuthContext();
+const AddRecipe = ({mongoContext}) => { 
+    const user  = mongoContext.app.currentUser;
     const { protocolId, patientId } = useParams();
     const [errors] = useState({name: false})
-    const [patient] = usePatientState(patientId);
+    const [patient, setPatient] = useState();
     const [protocol, setProtocol] = useState();
     const navigate = useNavigate();
     
 const today = ddmmyyyy(new Date());
 
     useEffect(() => {
-        console.log(`Patient is ${patient.name} ${patientId}`);
-        if(protocolId){
-            console.log("Getting protocol "+protocolId);
-            protocolService.getOne(protocolId)
-            .then(result => {
-                setProtocol(result);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-            
+        async function getProtocol(){
+            const db = mongoContext.client.db('recipes').collection('protocols');
+            let result = await db.find({"_id": new BSON.ObjectID(protocolId)});
+            console.log(`Protocol set to: ${JSON.stringify(protocol)}`);
+                setProtocol(result[0]);
         }
-    }, [patient.name, patientId, protocolId]);
+        async function getPatient(){
+            const patientsFromDB = mongoContext.client.db('recipes').collection('patients');
+            let patient = await patientsFromDB.find({"_id": new BSON.ObjectID(patientId)});
+            console.log(`Patient got: ${JSON.stringify(patient[0])}`);
+            setPatient(await JSON.parse(patient[0]));
+        }
+        console.log(`Protocol ID is ${protocolId}`);
+        if(protocolId){
+            getProtocol();
+        }
+        console.log(`PatientID as param: ${patientId}`);
+        if(!patient && patientId){
+            getPatient();
+        }
+    }, [patient, patientId, protocolId]);
     
 
     const addRecipeSubmitHandler = (e) => {

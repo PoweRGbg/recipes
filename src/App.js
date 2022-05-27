@@ -72,7 +72,7 @@ function App() {
               <Route path="/protocol/edit/:protocolId" element={<EditProtocol />} />
               <Route path="/protocol/delete/:protocolId" element={<DeleteProtocol />} />
               <Route path="/protocol/renew/:protocolId" element={<RenewProtocol />} />
-              <Route path="/recipe/add/:protocolId" element={<AddRecipe />} />
+              <Route path="/recipe/add/:protocolId" element={renderComponent(AddRecipe)} />
               <Route path="/recipe/add_recipe/:patientId" element={<AddRecipe />} />
               <Route path="/recipeslist/:protocolId" element={<RecipesList />} />
               <Route path="/details/:patientId" element={renderComponent(Details)} />
