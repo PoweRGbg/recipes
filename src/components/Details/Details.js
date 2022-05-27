@@ -13,6 +13,7 @@ import RecipesDashboard from "../RecipesDashboard/RecipesDashboard";
 import {ddmmyyyy} from "../../common/utils";
 import { BSON } from 'realm-web';
 import Loading from "../Loading/Loading";
+import usePatientState from '../../hooks/usePatientState';
 
 const Details = ({mongoContext}) => {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Details = ({mongoContext}) => {
     const { patientId } = useParams();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [protocols, setProtocols] = useState([]);
-    const [patient, setPatient] = useState({});
+    const [patient, setPatient] = usePatientState(patientId);
     const [loading, setLoading] = useState(true);
 
     
@@ -106,7 +107,7 @@ const Details = ({mongoContext}) => {
                             {protocols?.map(x =>{ 
 
                             return <div className="div-list-item" key={x._id}> 
-                                <li>За <b>{x.medication}</b> до {ddmmyyyy(new Date(x.endDate))}
+                                <li>За <b>{x.medication}</b> до {ddmmyyyy(new Date(Number(x.endDate)))} 
                                     <a href={`/recipe/add/${x._id}`}>
                                         <img className="protocolIcons" src="/images/icons/gui_add_icon.png" alt="" title="Добави рецепта"></img>
                                     </a>

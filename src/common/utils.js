@@ -2,7 +2,6 @@ import { MongoContext } from '../contexts/MongoContext';
 
 
 export const ddmmyyyy = function(date) {
-    console.log(date);
     var mm = date?.getMonth() + 1; // getMonth() is zero-based
     var dd = date?.getDate();
     
