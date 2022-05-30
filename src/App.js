@@ -28,7 +28,7 @@ import * as Realm from 'realm-web';
 function App() {
   const [client, setClient] = useState(null);
   const [user, setUser] = useState(null);
-  const [app, setApp] = useState(new Realm.App({id: "<YOUR-APP-ID-HERE"}));
+  const [app, setApp] = useState(new Realm.App({id: "recipes-tmpij"}));
 
   useEffect(() => {
     async function init () {
@@ -73,7 +73,7 @@ function App() {
               <Route path="/protocol/delete/:protocolId" element={<DeleteProtocol />} />
               <Route path="/protocol/renew/:protocolId" element={<RenewProtocol />} />
               <Route path="/recipe/add/:protocolId" element={renderComponent(AddRecipe)} />
-              <Route path="/recipe/add_recipe/:patientId" element={<AddRecipe />} />
+              <Route path="/recipe/add_recipe/:patientId" element={renderComponent(AddRecipe)} />
               <Route path="/recipeslist/:protocolId" element={<RecipesList />} />
               <Route path="/details/:patientId" element={renderComponent(Details)} />
             </Routes>

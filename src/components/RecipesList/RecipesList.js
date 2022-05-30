@@ -11,7 +11,8 @@ import {ddmmyyyy} from "../../common/utils.js";
 const RecipesList = (props) => {
     const  protocolId  = props.protocolId;
     const  patientId  = props.patientId;
-    const [recipes] = useRecipesState(protocolId, patientId);
+    const mongoContext = props.mongoContext;
+    const [recipes] = useRecipesState(protocolId, patientId, mongoContext);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [selectedRecipe, setSelectedRecipe] = useState();
     const { user } = useAuthContext();
@@ -32,8 +33,7 @@ const RecipesList = (props) => {
             {protocolId ? <h5>Рецепти:</h5>: ""}
             <ul>
             {recipes && recipes.length > 0 ? recipes.map(x=>{
-            if(x.protocolId === protocolId)
-            return <li key={x._id}>{x.medication} до {ddmmyyyy(new Date(x.endDate))}
+            return <li key={x._id}>{x.medication} до {ddmmyyyy(new Date(Number(x.endDate)))}
                     
                     <Link className="button" to="#" onClick={() => {setSelectedRecipe(x); setShowDeleteDialog(true)}}>Вземи рецепта</Link>
             </li>
