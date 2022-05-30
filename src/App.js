@@ -28,7 +28,7 @@ import * as Realm from 'realm-web';
 function App() {
   const [client, setClient] = useState(null);
   const [user, setUser] = useState(null);
-  const [app, setApp] = useState(new Realm.App({id: "recipes-tmpij"}));
+  const [app, setApp] = useState(new Realm.App({id: "<YOUR-APP-ID-HERE"}));
 
   useEffect(() => {
     async function init () {
