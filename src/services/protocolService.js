@@ -1,17 +1,17 @@
 import { request } from './requester';
 
-const baseUrl = 'http://localhost:3030/data';
+const baseUrl = 'https://eu-central-1.aws.data.mongodb-api.com/app/app2-bqvvg/endpoint/patients?secret=user';
 
-export const getAll = () => request(`${baseUrl}/protocols`)
+export const getAll = () => request(`${baseUrl}`);
 
-export const create = async (protocolData, token) => {
+export const create = async (patientData, token) => {
     let response = await fetch(`${baseUrl}/protocols`, {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
             'X-Authorization': token,
         },
-        body: JSON.stringify({...protocolData})
+        body: JSON.stringify({...patientData, likes: []})
     });
 
     let result = await response.json();

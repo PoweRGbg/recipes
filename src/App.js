@@ -24,6 +24,7 @@ import ErrorBoundary from './components/Common/ErrorBoundary';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import RenewProtocol from './components/Protocol/RenewProtocol';
 import * as Realm from 'realm-web';
+import RecipesDashboard from './components/RecipesDashboard';
 
 function App() {
   const [client, setClient] = useState(null);
@@ -70,12 +71,14 @@ function App() {
               <Route path="/edit/:patientId" element={<Edit />} />
               <Route path="/protocol/add/:patientId" element={renderComponent(AddProtocol)} />
               <Route path="/protocol/edit/:protocolId" element={<EditProtocol />} />
-              <Route path="/protocol/delete/:protocolId" element={<DeleteProtocol />} />
+              <Route path="/protocol/delete/:protocolId" element={renderComponent(DeleteProtocol)} />
               <Route path="/protocol/renew/:protocolId" element={<RenewProtocol />} />
               <Route path="/recipe/add/:protocolId" element={renderComponent(AddRecipe)} />
               <Route path="/recipe/add_recipe/:patientId" element={renderComponent(AddRecipe)} />
               <Route path="/recipeslist/:protocolId" element={<RecipesList />} />
               <Route path="/details/:patientId" element={renderComponent(Details)} />
+              <Route path="/recipesdashboard/:patientId" element={renderComponent(RecipesDashboard)} />
+
             </Routes>
           </main>
 

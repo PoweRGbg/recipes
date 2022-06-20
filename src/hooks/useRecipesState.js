@@ -4,21 +4,35 @@ import * as recipeService from '../services/recipeService';
 import { useAuthContext } from '../contexts/AuthContext';
 
 
-const useRecipesState = (protocolId, patientId) => {
+const useRecipesState = (protocolId, patientId, mongoContext) => {
     const { user } = useAuthContext();
     const [recipes, setRecipes] = useState({});
 
     useEffect(() => {
+        async function getRecipesByProtocol(){
+            const collection = mongoContext.client.db('recipes').collection('recipes');
+            let recipesFromDB = await collection.find({"protocolId": ""+protocolId});
+            if(recipesFromDB.length > 0){
+                setRecipes(recipesFromDB);
+            }
+            
+        }
+
+        
+        async function getRecipesByPatient(){
+            const collection = mongoContext.client.db('recipes').collection('recipes');
+            let recipesFromDB = await collection.find({"parientId": ""+patientId});
+            if(recipesFromDB.length > 0){
+                setRecipes(recipesFromDB);
+            }
+        }
+
         if(protocolId !== ""){
-            recipeService.getByProtocol(protocolId, user.accessToken)
-            .then(recipesList => {
-                setRecipes(recipesList);
-            })
-        } else 
-        recipeService.getByPatient(patientId, user.accessToken)
-        .then(recipesList => {
-            setRecipes(recipesList);
-        })
+            getRecipesByProtocol();
+        } else {
+            getRecipesByPatient();
+        } 
+
     }, [protocolId, patientId, user.accessToken]);
         
 

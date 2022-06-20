@@ -1,47 +1,47 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import * as protocolService from '../../../services/protocolService';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../contexts/AuthContext';
 import ConfirmDialog from '../../Common/ConfirmDialog';
 import {ddmmyyyy} from "../../../common/utils.js";
+import { BSON } from 'realm-web';
 
-const DeleteProtocol = () => { 
+
+const DeleteProtocol = ({mongoContext}) => { 
     const { user } = useAuthContext();
     const { protocolId } = useParams();
     const [errors, setErrors] = useState({name: false})
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
-    const navigate = useNavigate();
     const [protocol, setProtocol] = useState();
 
+    const navigate = useNavigate();
+
     useEffect(() => {
-        console.log(protocolId);
-        protocolService.getOne(protocolId)
-            .then(result => {
-                console.log(result);
-                setProtocol(result);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }, []);
+        async function getPatient(){
+            const protocolsFromDb = mongoContext.client.db('recipes').collection('protocols');
+            let patient = await protocolsFromDb.find({"_id": new BSON.ObjectID(protocolId)});
+            setProtocol(patient[0]);
+        }
+        getPatient();
+
+    }, [protocolId, mongoContext.client]);
     
 
 const today = ddmmyyyy(new Date());
 
-    const DeleteProtocolHandler = (e) => {
+    const DeleteProtocolHandler = async (e) => {
         e.preventDefault();
 
         console.log('Deleting protocol '+protocol.medication);
-
-        protocolService.remove(protocolId, user.accessToken)
-            .then(result => {
-                navigate(`/details/${protocol.patientId}`);
-            })
-
-
+        const collection = mongoContext.client.db('recipes').collection('protocols');
+        await collection.deleteOne({
+            "_id": protocol._id
+        }, function(err, res) {
+            if (err) console.log(err);
+        });
+            
+        navigate(`/details/${protocol.patientId}`);
     }
 
     const deleteClickHandler = (e) => {
@@ -72,13 +72,13 @@ const today = ddmmyyyy(new Date());
                     <p className="field">
                         <label htmlFor="description">Начална дата</label>
                         <span className="input">
-                            <input name="start" id="start" defaultValue={protocol != undefined?new Date(protocol.startDate).ddmmyyyy():""}/>
+                            <input name="start" id="start" defaultValue={protocol != undefined?ddmmyyyy(new Date(protocol.startDate)):""}/>
                         </span>
                     </p>
                     <p className="field">
                         <label htmlFor="validity">Крайна дата </label>
                         <span className="input">
-                            <input name="endDate" id="endDate"  defaultValue={protocol != undefined?new Date(protocol.endDate).ddmmyyyy():""}/>
+                            <input name="endDate" id="endDate"  defaultValue={protocol != undefined?ddmmyyyy(new Date(protocol.endDate)):""}/>
                         </span>
                     </p>
                     {protocol != undefined?<input type="hidden" name='patientID' value={protocol.patientId}></input>:""}

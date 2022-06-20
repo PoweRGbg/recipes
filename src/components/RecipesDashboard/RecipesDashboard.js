@@ -4,7 +4,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import * as patientService from '../../services/patientService';
 import { useAuthContext } from '../../contexts/AuthContext';
 import usePatientState from '../../hooks/usePatientState';
-import * as recipeService from '../../services/recipeService';
+import { BSON } from 'realm-web';
 
 import ConfirmDialog from '../Common/ConfirmDialog';
 import RecipesList  from '../RecipesList'
@@ -17,30 +17,23 @@ const RecipesDashboard = (props) => {
     const { patientId } = "";
     const [patient, setPatient] = usePatientState(patientId);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const [recipes, setReciepes] = useState([]);
+    const mongoContext = props.mongoContext;
 
-
-    function isValid(protocolDate){
-        return new Date(protocolDate).getTime() >= Date.now();
-    }
 
     useEffect(() => {
-        // if(props.patientId)
-        // recipeService.getByPatient(props.patientId, user.accessToken)
-        //     .then(result => {
-        //         console.log(`Got recipes! ${props.patientId}`);
-        //         let filtered = [];
-        //         result.forEach(x => {if(isValid(x.endDate))
-        //             if(x.protocolId === "" && x.patientId === props.patientId){
-        //                 filtered.push(x);
-        //             }
-        //         });
-        //         setReciepes(filtered);
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     })
-    }, [props.patientId]);
+
+        async function getPatient(){
+            if(mongoContext.client){
+
+                const patientsFromDB = mongoContext.client.db('recipes').collection('patients');
+                let patient = await patientsFromDB.find({"_id": new BSON.ObjectID(patientId)});
+                setPatient(patient[0]);
+            }
+        }
+
+        getPatient();
+
+    }, [props.patientId, props.mongoContext.client]);
 
     const deleteHandler = (e) => {
         e.preventDefault();
@@ -56,7 +49,7 @@ const RecipesDashboard = (props) => {
 
     const ownerButtons = (
         <>
-            <Link className="button" to={`/recipe/add_recipe/${patient._id}`}>Нова рецепта</Link>
+            <Link className="button" to={`/recipe/add_recipe/${patient?._id}`}>Нова рецепта</Link>
         </>
     );
 
@@ -65,10 +58,10 @@ const RecipesDashboard = (props) => {
 
     return (
         <>
-            <ConfirmDialog text={`Сигурни ли сте, че искате да изтриете ${patient.name}?`} show={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} onSave={deleteHandler} />
+            <ConfirmDialog text={`Сигурни ли сте, че искате да изтриете ${patient?.name}?`} show={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} onSave={deleteHandler} />
                     <h3>Рецепти без протоколи:</h3>
                         <div className="div-list-item"> 
-                            <RecipesList protocolId="" patientId={props.patientId}/>
+                            <RecipesList patientId={props.patientId} mongoContext={mongoContext}/>
                         </div>
                     <div className="actions">
                         {user._id && (user._id == patient._ownerId

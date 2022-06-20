@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import * as patientService from '../services/patientService';
 import { BSON } from 'realm-web';
 import * as Realm from 'realm-web';
+import { MongoContext } from '../contexts/MongoContext';
 
 const usePatientState = (patientId) => {
     const [patient, setPatient] = useState({});
@@ -23,9 +24,12 @@ const usePatientState = (patientId) => {
       
         init();
         async function getPatient(){
-            const patientsFromDB = client.db('recipes').collection('patients');
-            let patient = await patientsFromDB.find({"_id": new BSON.ObjectID(patientId)});
-            setPatient(await JSON.parse(patient[0]));
+            if(client){
+
+              const patientsFromDB = client.db('recipes').collection('patients');
+              let patient = await patientsFromDB.findOne({"_id": new BSON.ObjectID(patientId)});
+              setPatient(await JSON.parse(patient));
+            }
         }
 
         

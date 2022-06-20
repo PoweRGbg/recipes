@@ -1,30 +1,59 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import * as recipeService from '../../services/recipeService';
-
+import { useNavigate } from 'react-router-dom';
 import useRecipesState from '../../hooks/useRecipesState';
 import { useAuthContext } from '../../contexts/AuthContext';
 import ConfirmDialog from '../Common/ConfirmDialog';
 import {ddmmyyyy} from "../../common/utils.js";
 
-
 const RecipesList = (props) => {
     const  protocolId  = props.protocolId;
     const  patientId  = props.patientId;
     const mongoContext = props.mongoContext;
-    const [recipes] = useRecipesState(protocolId, patientId, mongoContext);
+    // const [recipes] = useRecipesState(protocolId, patientId, mongoContext);
+    const [recipes, setRecipes] = useState();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [selectedRecipe, setSelectedRecipe] = useState();
+    const navigate = useNavigate();
     const { user } = useAuthContext();
 
-    const deleteHandler = (e) => {
+    useEffect(() => {
+        async function getRecipesByProtocol(){
+            const collection = mongoContext.client.db('recipes').collection('recipes');
+            let recipesFromDB = await collection.find({"protocolId": ""+protocolId});
+            if(recipesFromDB.length > 0){
+                setRecipes(recipesFromDB);
+            }
+            
+        }
+
+        
+        async function getRecipesByPatient(){
+            const collection = mongoContext.client.db('recipes').collection('recipes');
+            let recipesFromDB = await collection.find({"patientId": ""+patientId, "protocolId":""});
+            if(recipesFromDB.length > 0){
+                setRecipes(recipesFromDB);
+            }
+        }
+
+        if(mongoContext.client){
+            if(protocolId !== "" && protocolId !== undefined){
+                getRecipesByProtocol();
+            } else {
+                getRecipesByPatient();
+            } 
+        }
+    }, [protocolId, patientId, mongoContext.client]);
+
+    const deleteHandler = async(e) => {
         e.preventDefault();
-        console.log(`Deleting recipe for ${selectedRecipe.medication}`);
-        recipeService.remove(selectedRecipe._id, user.accessToken)
-            .then(() => {
-                setSelectedRecipe(undefined);
-                window.location.reload(false);
-            });
+        const collection = mongoContext.client.db('recipes').collection('recipes');
+        await collection.deleteOne({
+            "_id": selectedRecipe._id
+        }, function(err, res) {
+            if (err) console.log(err);
+        });
+        navigate(0);
         }
 
     return (

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import * as recipeService from '../../../services/recipeService';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import usePatientState from '../../../hooks/usePatientState';
@@ -11,7 +10,7 @@ const AddRecipe = ({mongoContext}) => {
     const user  = mongoContext.app.currentUser;
     const { protocolId, patientId } = useParams();
     const [errors] = useState({name: false})
-    const [patient, setPatient] = useState();
+    const [patient, setPatient] = usePatientState();
     const [protocol, setProtocol] = useState();
     const navigate = useNavigate();
     
@@ -21,24 +20,29 @@ const today = ddmmyyyy(new Date());
         async function getProtocol(){
             const db = mongoContext.client.db('recipes').collection('protocols');
             let result = await db.find({"_id": new BSON.ObjectID(protocolId)});
-            console.log(`Protocol set to: ${JSON.stringify(protocol)}`);
                 setProtocol(result[0]);
         }
         async function getPatient(){
-            const patientsFromDB = mongoContext.client.db('recipes').collection('patients');
-            let patient = await patientsFromDB.find({"_id": new BSON.ObjectID(patientId)});
-            console.log(`Patient got: ${JSON.stringify(patient[0])}`);
-            setPatient(await JSON.parse(patient[0]));
+            if(patientId && !patient){
+                console.log("Getting patient "+patientId);
+                const patientsFromDB = mongoContext.client.db('recipes').collection('patients');
+                let patientFromDb = await patientsFromDB.findOne({"_id": new BSON.ObjectID(patientId)});
+                console.log("FromDB "+JSON.stringify(patientFromDb));
+                setPatient(patientFromDb);
+            } else {
+                console.log(`Patient already set: ${JSON.stringify(patient)}`);
+            }
         }
-        console.log(`Protocol ID is ${protocolId}`);
-        if(protocolId){
+        console.log(`ProtocolID as param ${protocolId}`);
+        if(protocolId && mongoContext.client){
             getProtocol();
         }
         console.log(`PatientID as param: ${patientId}`);
-        if(!patient && patientId){
+        if(patientId){
             getPatient();
+            console.log("Now patient is  "+patient?._id);
         }
-    }, [patient, patientId, protocolId]);
+    }, [patientId, protocolId, mongoContext.client, patient]);
     
 
     const addRecipeSubmitHandler = (e) => {
@@ -56,8 +60,9 @@ const today = ddmmyyyy(new Date());
         let validity = Number(formData.get('validity'));
         let startDate = new Date(start[2], Number(start[1])-1, start[0]);
         let endDate = new Date(startDate.setDate(startDate.getDate() + validity));
+        const collection = mongoContext.client.db('recipes').collection('recipes');
         
-        console.log(`Adding recipe for ${medication} patient ${patientName} ${triple} ${patientId}`);
+        console.log(`Adding recipe for ${medication} patient ${patientName} isTripple:${triple} patientId:${patientId}`);
         // add single or tripple recipe
         if(triple){
             for (let index = 1;index < 4;index++) {
@@ -66,41 +71,39 @@ const today = ddmmyyyy(new Date());
                     endDate = new Date(startDate.setDate(startDate.getDate() + validity));
                 }
                 
-                recipeService.create({
-                        patientId,
-                        patientName,
-                        protocolId,
-                        medication,
-                        startDate,
-                        endDate
-                    }, user.accessToken)
-                .then(result => {
-                        console.log(`Added recipe for ${medication} ${index} of 3`);
-                        // Go to patient details after the last recipe
-                        if(index === 3)
-                            navigate(`/details/${patientId}`);
-                    })
+                collection.insertOne({
+                    "patientId":patientId, 
+                    "patientName":patientName, 
+                    "protocolId": protocolId,
+                    "medication": medication, 
+                    "startDate": ""+startDate.getTime(),
+                    "endDate": ""+endDate.getTime()
+                }, function(err, res) {
+                    if (err) alert(err);
+                });
             }
         } else {
-            recipeService.create({
-                    patientId,
-                    patientName,
-                    protocolId,
-                    medication,
-                    startDate,
-                    endDate
-                }, user.accessToken)
-            .then(result => {
-                    navigate(`/details/${patientId}`);
-                })
+            collection.insertOne({
+                "patientId":patientId, 
+                "patientName":patientName, 
+                "protocolId": protocolId,
+                "medication": medication, 
+                "startDate": ""+startDate.getTime(),
+                "endDate": ""+endDate.getTime()
+            }, function(err, res) {
+                if (err) alert(err);
+            });
+            
+            
         }
+        navigate("/details/"+patientId);
     }
     
     return (
         <section id="edit-page" className="edit">
             <form id="edit-form" method="POST" onSubmit={addRecipeSubmitHandler}>
                 <fieldset>
-                    <legend>Добави рецепта {protocol && protocol.medication !== undefined ? "към протокол за " + protocol.medication:""} {patient ? `за ${patient.name}`:""}</legend>
+                    <legend>Добави рецепта {protocol && protocol.medication !== undefined ? "към протокол за " + protocol.medication:""} {patient?.name ? `на ${patient.name}`:""}</legend>
                     <p className="field">
                         <label htmlFor="name">Лекарство</label>
                         <span className="input" style={{borderColor: errors.name ? 'red' : 'inherit'}}>
@@ -124,8 +127,8 @@ const today = ddmmyyyy(new Date());
                     <input className="checkbox-triple" type="checkbox" id="triple" name="triple"></input>
                     </label>
                     </div>
-                    <input type="hidden" name='patientID' value={protocol ? protocol.patientId:""}></input>
-                    <input type="hidden" name='patientName' value={protocol ? protocol.patientName:""}></input>
+                    <input type="hidden" name='patientID' value={protocol ? protocol.patientId:patientId}></input>
+                    <input type="hidden" name='patientName' value={protocol ? protocol.patientName:patient?.name}></input>
                     <input type="hidden" name='protocolId' value={protocolId ? protocolId:""}></input>
                     <input className="button submit" type="submit" value="Добави рецепта" />
                 </fieldset>

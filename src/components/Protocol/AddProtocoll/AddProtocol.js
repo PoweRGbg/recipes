@@ -23,7 +23,7 @@ const AddProtocol = ({mongoContext}) => {
             setPatient(patient[0]);
         }
         getPatient();
-    }, [patientId]);
+    }, [patientId, mongoContext.client]);
     
 const today = ddmmyyyy(new Date());
 
